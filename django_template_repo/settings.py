@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.core.app_conf.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -67,8 +68,13 @@ WSGI_APPLICATION = 'django_template_repo.wsgi.application'
 # -------------------------------- 存储 --------------------------------
 
 # 主键字段的默认类型
+# 注意：每个app都可以配置app范围内的主键字段默认类型
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 用户模型
+# （仅在创建数据库前定义，后续不可更改）
+AUTH_USER_MODEL = 'core.User'
 
 # 数据库
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#databases
