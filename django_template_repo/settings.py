@@ -117,6 +117,8 @@ CACHES = {
 
 # -------------------------------- 安全 --------------------------------
 
+APPEND_SLASH = False
+
 ALLOWED_HOSTS = []
 
 # 密码验证
@@ -141,10 +143,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # --------------------------------
 
-# 静态文件相关配置 (CSS, JavaScript, Images)
+# 静态文件 (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/zh-hans/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'  # 项目app以及项目本身的静态文件将被收集到这个目录，应配置为对外公开的文件路径，例如 /var/www/example.com/static/
+
+# --------------------------------
+
+# 用户上传内容
+# https://docs.djangoproject.com/zh-hans/4.2/topics/security/#user-uploaded-content-security
+
+MEDIA_URL = 'user-uploads/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # -------------------------------- 国际化 --------------------------------
 # Internationalization
