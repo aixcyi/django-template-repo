@@ -10,6 +10,8 @@ django_template_repo 的项目设置。
 
 from pathlib import Path
 
+from utils.converters import dict_
+
 # 项目根目录
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -101,6 +103,18 @@ DATABASES = {
     ),
 }
 
+# 缓存
+# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#caches
+CACHES = {
+    'template_redis': dict(
+        BACKEND='django.core.cache.backends.redis.RedisCache',
+        LOCATION='redis://127.0.0.1:6379/0',
+    ),
+    'template_memory': dict(
+        BACKEND='django.core.cache.backends.locmem.LocMemCache',
+    ),
+}
+
 # -------------------------------- 安全 --------------------------------
 
 ALLOWED_HOSTS = []
@@ -143,3 +157,104 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+# -------------------------------- 日志 --------------------------------
+
+LOGS_DIR = BASE_DIR / 'logs'
+LOGS_DIR.mkdir(exist_ok=True)
+
+# 日志模块的配置：https://docs.djangoproject.com/zh-hans/4.2/topics/logging/#configuring-logging
+# 配置字典架构：https://docs.python.org/zh-cn/3/library/logging.config.html#logging-config-dictschema
+LOGGING = dict(
+    version=1,
+    disable_existing_loggers=False,
+    formatters={
+        # 格式化器默认配置：https://docs.python.org/zh-cn/3/library/logging.html#logging.Formatter
+        'verbose': dict(
+            format=(
+                '[%(asctime)s] '
+                '[%(name)s/%(levelname)s] '
+                '[%(process)d,%(processName)s] '
+                '[%(thread)d,%(threadName)s] '
+                '[%(module)s.%(funcName)s:%(lineno)d]: '
+                '%(message)s'
+            ),
+        ),
+        'standard': dict(
+            format=(
+                '[%(asctime)s] '
+                '[%(name)s/%(levelname)s] '
+                '[%(module)s.%(funcName)s:%(lineno)d]: '
+                '%(message)s'
+            ),
+        ),
+        # 自定义格式化器：https://docs.python.org/zh-cn/3/library/logging.config.html#user-defined-objects
+        'printing': {
+            '()': 'logging.Formatter',
+            'fmt': (
+                '[%(asctime)s] '
+                '[%(name)s/%(levelname)s] '
+                '[%(module)s.%(funcName)s:%(lineno)d]: '
+                '%(message)s'
+            ),
+            '.': {
+                'default_time_format': '%H:%M:%S',
+                'default_msec_format': '%s,%03d',
+            },
+        }
+    },
+    filters={
+        # 过滤器：https://docs.python.org/zh-cn/3/library/logging.html#logging.Filter
+        'require_debugging': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    handlers={
+        'Console': dict_(
+            class_='logging.StreamHandler',
+            level='DEBUG',
+            formatter='printing',
+        ),
+        'RequestRecorder': dict_(
+            class_='logging.handlers.TimedRotatingFileHandler',
+            level='DEBUG',
+            formatter='standard',
+            filename=LOGS_DIR / 'requests.log',
+            encoding='UTF-8',
+            backupCount=365,
+            when='d',
+        ),
+        'ProjectRecorder': dict_(
+            class_='logging.handlers.TimedRotatingFileHandler',
+            level='DEBUG',
+            formatter='standard',
+            filename=LOGS_DIR / 'records.log',
+            encoding='UTF-8',
+            backupCount=365,
+            when='d',
+        ),
+        'ProjectAlarmer': dict_(
+            class_='logging.handlers.TimedRotatingFileHandler',
+            level='WARNING',
+            formatter='verbose',
+            filename=LOGS_DIR / 'alarms.log',
+            encoding='UTF-8',
+            backupCount=365,
+            when='d',
+        ),
+    },
+    loggers={
+        'django.request': dict(
+            level='INFO',
+            filters=[],
+            handlers=['RequestRecorder'],
+            propagate=False,
+        ),
+        'project': dict(
+            level='DEBUG',
+            filters=[],
+            handlers=['ProjectRecorder', 'ProjectAlarmer'],
+            propagate=False,
+        ),
+    },
+)

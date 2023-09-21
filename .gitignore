@@ -4,6 +4,9 @@
 # Caches
 **/__pycache__
 
+# Logs
+/logs
+
 # Configurations
 /.git
 /.idea
