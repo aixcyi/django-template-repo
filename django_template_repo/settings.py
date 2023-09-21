@@ -178,7 +178,6 @@ USE_TZ = True
 # -------------------------------- 日志 --------------------------------
 
 LOGS_DIR = BASE_DIR / 'logs'
-LOGS_DIR.mkdir(exist_ok=True)
 
 # 日志模块的配置：https://docs.djangoproject.com/zh-hans/4.2/topics/logging/#configuring-logging
 # 配置字典架构：https://docs.python.org/zh-cn/3/library/logging.config.html#logging-config-dictschema
