@@ -1,0 +1,10 @@
+# Virtual Environment
+/venv
+
+# Caches
+**/__pycache__
+
+# Configurations
+/.git
+/.idea
+/.vscode
