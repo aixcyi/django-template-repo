@@ -8,6 +8,16 @@ from django.apps import apps
 from django.db import models
 
 
+def convert_camel_name(name):
+    # "CombineOrderSKUModel"
+    # -> "Combine OrderSKU Model"
+    # -> "Combine Order SKU Model"
+    # -> "combine_order_sku_model"
+    mid = re.sub('(.)([A-Z][a-z]+)', r'\1 \2', name)
+    words = re.sub('([a-z0-9])([A-Z])', r'\1 \2', mid)
+    return '_'.join(word.lower() for word in words.split())
+
+
 class SnakeModel(models.base.ModelBase):
     """
     自动生成一个下划线小写的（蛇形）数据表名。
@@ -36,17 +46,14 @@ class SnakeModel(models.base.ModelBase):
             return super().__new__(cls, name, bases, attrs, **kwargs)
 
         app_name = app_config.label
-
-        model_name = re.sub(r'[A-Z]', (lambda s: f'_{s.group(0).lower()}'), name)
-        model_name = model_name[1:] if model_name.startswith('_') else model_name
-
+        model_name = convert_camel_name(name)
         table_name = f'{app_name}_{model_name}'
 
         if 'Meta' not in attrs:
             attrs['Meta'] = type('Meta', (), dict(db_table=table_name))
 
-        abstract = getattr(attrs["Meta"], 'abstract', False)
-        if not hasattr(attrs["Meta"], 'db_table') and not abstract:
+        abstract = getattr(attrs['Meta'], 'abstract', False)
+        if not hasattr(attrs['Meta'], 'db_table') and not abstract:
             setattr(attrs['Meta'], 'db_table', table_name)
 
         return super().__new__(cls, name, bases, attrs, **kwargs)
