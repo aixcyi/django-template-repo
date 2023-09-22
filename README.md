@@ -4,9 +4,9 @@ Django 4.2 项目的模板仓库。
 
 ## 优点
 
-- 通过 settings_*.py 隔离不同环境的配置。
-- 很容易看出来 settings 里大部分配置字典的哪些 key 是固定的。
-- 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会创建 `order_goods_sku_info` 表。
+- 可以隔离不同环境的配置。
+- 更加易读的 settings.py 。
+- 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会创建 `order_goods_sku_info` 表，而不会是 `order_goodsskuinfo` 。
 - 自带 alarms.log、records.log、requests.log 三个日志配置。
 - 自定义 `User` 模型（放在自带的 `core` app里）。
 - 将 Django App 集中存放在 ./apps 目录下。
@@ -16,26 +16,29 @@ Django 4.2 项目的模板仓库。
 > [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/4.2/faq/install/#what-python-version-can-i-use-with-django)
 
 1. [从模板创建仓库 - GitHub](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) ；
-2. 使用 `git clone my_project git@github.com:YOURNAME/PROJECT.git` 克隆刚刚创建的仓库；
-3. 根据需要创建虚拟环境，并切换到虚拟环境中；
-4. 在项目配置目录（也就是 settings.py 所在的文件夹）中创建自己的配置文件 settings_dev.py ；
-5. 将根目录下的 manage.py 里的环境变量 `DJANGO_SETTINGS_MODULE` 修改为 `配置目录.settings_dev` ；
-6. 使用 `python manage.py runserver 127.0.0.1:8080` 运行项目。
+2. 克隆刚刚创建的仓库；
+3. 使用 IDE 打开项目，将文件夹 ./django_template_repo 重命名为你的项目名，同时，连带重命名 **所有** 相关引用和字符串；
+4. 根据需要创建虚拟环境，并切换到虚拟环境中；
+5. 在 ./django_template_repo 中创建自己的配置文件 settings_dev.py ；
+6. 将以下文件里的环境变量 `DJANGO_SETTINGS_MODULE` 的值修改为 `"django_template_repo.settings_dev"` ；
+   - ./manage.py
+   - ./django_template_repo/asgi.py
+   - ./django_template_repo/wsgi.py
+7. `python manage.py runserver` 运行项目。
 
-## 配置模板
+## 配置设置
 
-settings_*.py 模板如下：
+> 参见 [Django Settings](https://docs.djangoproject.com/zh-hans/4.2/ref/settings/)、[Django REST Framework Settings](https://www.django-rest-framework.org/api-guide/settings/)
+
+./django_template_repo/settings_*.py 不会被纳入版本管理，你可以通过创建不同命名的配置来实现生产环境和开发环境的隔离，比如用 `settings_dev.py` 配置开发环境，用 `settings_prod.py` 来配置生产环境。
 
 ```python
-# 导入自己项目下的 settings
 from django_template_repo.settings import *
 
 # ---------------- 以下配置是必须的 ----------------
 
-# 不可公开的密钥，Django 用来计算各种带盐的哈希。
 SECRET_KEY = '<随机生成的任意ASCII字符>'
 
-# 模板没有 default 项，而 Django 默认只使用 default 项，所以必须配置。
 DATABASES['default'] = dict(
     ENGINE='django.db.backends.postgresql',
     NAME='<数据库名称>',
@@ -44,8 +47,6 @@ DATABASES['default'] = dict(
     HOST='127.0.0.1',
     PORT='5432',
 )
-
-# 模板没有 default 项，而 Django 默认只使用 default 项，所以必须配置。
 CACHES['default'] = dict(
     BACKEND='django.core.cache.backends.redis.RedisCache',
     LOCATION='redis://127.0.0.1:6379/<序列号码>',
@@ -53,11 +54,11 @@ CACHES['default'] = dict(
 
 # ---------------- 以下配置是可选的 ----------------
 
-# 开启调试模式。
-DEBUG = True  # 生产环境中墙裂不推荐开启！！！
+DEBUG = True  # 请勿在生产环境中设置为 True
 
-# 空列表只接收本地IP的请求。在本地环境中，如果请求要回调到本地，则需要允许特定IP的请求。
-# 以下配置表示允许来自任意IP的请求，生产环境中不推荐这么做！
+# 默认是空列表，只接收本地IP的请求。
+# 在本地环境中，如果请求要回调到本地，则需要允许特定IP的请求；
+# 但为了方便，可以使用以下配置允许来自任意IP的请求。
 ALLOWED_HOSTS = ['*']
 
 # 确保日志目录一定存在
@@ -67,4 +68,16 @@ LOGS_DIR.mkdir(exist_ok=True)
 LOGGING['loggers']['django.request']['handlers'] = ['Console', 'RequestRecorder']
 
 # 更多对 settings.py 的自定义覆盖……
+```
+
+使用以下代码可以快速生成十个随机 `SECRET_KEY` 备选：
+
+```python
+from base64 import b85encode
+from random import getrandbits
+
+for _ in range(10):
+    soup = getrandbits(64 * 8).to_bytes(64, 'big')
+    key = b85encode(soup).decode('ASCII')
+    print(key)
 ```
