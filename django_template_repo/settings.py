@@ -17,12 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # -------------------------------- 核心 --------------------------------
 
-# 私有密钥，切勿公开！
-SECRET_KEY = ''
-
-# 切勿在生产环境开启调试！
-DEBUG = False
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -124,8 +118,6 @@ CACHES = {
 # -------------------------------- 安全 --------------------------------
 
 APPEND_SLASH = False
-
-ALLOWED_HOSTS = []
 
 # 密码验证
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#auth-password-validators

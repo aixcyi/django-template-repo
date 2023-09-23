@@ -37,6 +37,7 @@ from django_template_repo.settings import *
 
 # ---------------- 以下配置是必须的 ----------------
 
+# 切记保密你的SECRET_KEY
 SECRET_KEY = '<随机生成的任意ASCII字符>'
 
 DATABASES['default'] = dict(
@@ -56,15 +57,11 @@ CACHES['default'] = dict(
 
 DEBUG = True  # 请勿在生产环境中设置为 True
 
-# 默认是空列表，只接收本地IP的请求。
-# 在本地环境中，如果请求要回调到本地，则需要允许特定IP的请求；
-# 但为了方便，可以使用以下配置允许来自任意IP的请求。
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # DEBUG=False 时必须配置为非空列表
 
-# 确保日志目录一定存在
-LOGS_DIR.mkdir(exist_ok=True)
+LOGS_DIR.mkdir(exist_ok=True)  # 确保日志目录一定存在
 
-# 这个配置用于把 Django 接收到的所有请求打印到控制台中。
+# 把 Django 接收到的所有请求打印到控制台中。
 LOGGING['loggers']['django.request']['handlers'] = ['Console', 'RequestRecorder']
 
 # 更多对 settings.py 的自定义覆盖……
