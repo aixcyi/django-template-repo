@@ -26,7 +26,7 @@ Django 4.2 项目的模板仓库。
    - ./django_template_repo/wsgi.py
 7. `python manage.py runserver` 运行项目。
 
-## 配置设置
+### 配置设置
 
 > 参见 [Django Settings](https://docs.djangoproject.com/zh-hans/4.2/ref/settings/)、[Django REST Framework Settings](https://www.django-rest-framework.org/api-guide/settings/)
 
@@ -77,4 +77,12 @@ for _ in range(10):
     soup = getrandbits(64 * 8).to_bytes(64, 'big')
     key = b85encode(soup).decode('ASCII')
     print(key)
+```
+
+### 创建应用
+
+在 ./apps 内创建一个带有 serializers.py（-s）和 urls.py（-u）的 Django App 。
+
+```shell
+python manage.py newapp APPNAME -su
 ```

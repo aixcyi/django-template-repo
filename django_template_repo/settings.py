@@ -12,8 +12,9 @@ from pathlib import Path
 
 from utils.converters import dict_
 
-# 项目根目录
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOGS_DIR = BASE_DIR / 'logs'
+APPS_DIR = BASE_DIR / 'apps'
 
 # -------------------------------- 核心 --------------------------------
 
@@ -168,8 +169,6 @@ USE_I18N = True
 USE_TZ = True
 
 # -------------------------------- 日志 --------------------------------
-
-LOGS_DIR = BASE_DIR / 'logs'
 
 # 日志模块的配置：https://docs.djangoproject.com/zh-hans/4.2/topics/logging/#configuring-logging
 # 配置字典架构：https://docs.python.org/zh-cn/3/library/logging.config.html#logging-config-dictschema
