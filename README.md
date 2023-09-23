@@ -48,16 +48,17 @@ DATABASES['default'] = dict(
     HOST='127.0.0.1',
     PORT='5432',
 )
-CACHES['default'] = dict(
-    BACKEND='django.core.cache.backends.redis.RedisCache',
-    LOCATION='redis://127.0.0.1:6379/<序列号码>',
-)
 
 # ---------------- 以下配置是可选的 ----------------
 
 DEBUG = True  # 请勿在生产环境中设置为 True
 
 ALLOWED_HOSTS = ['*']  # DEBUG=False 时必须配置为非空列表
+
+CACHES['default'] = dict(
+    BACKEND='django.core.cache.backends.redis.RedisCache',
+    LOCATION='redis://127.0.0.1:6379/<序列号码>',
+)
 
 LOGS_DIR.mkdir(exist_ok=True)  # 确保日志目录一定存在
 
