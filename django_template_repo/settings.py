@@ -16,6 +16,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOGS_DIR = BASE_DIR / 'logs'
 APPS_DIR = BASE_DIR / 'apps'
 
+# -------------------------------- 安全 --------------------------------
+
+# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#secret-key
+SECRET_KEY = None
+
+DEBUG = False
+
+ALLOWED_HOSTS = []  # DEBUG=False 时必须配置为非空列表
+
+APPEND_SLASH = False
+
+# 密码验证
+# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#auth-password-validators
+AUTH_PASSWORD_VALIDATORS = [
+    dict(
+        NAME='django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    ),
+    dict(
+        NAME='django.contrib.auth.password_validation.MinimumLengthValidator',
+        OPTIONS={
+            "min_length": 8,
+        },
+    ),
+    dict(
+        NAME='django.contrib.auth.password_validation.CommonPasswordValidator',
+    ),
+    dict(
+        NAME='django.contrib.auth.password_validation.NumericPasswordValidator',
+    ),
+]
+
 # -------------------------------- 核心 --------------------------------
 
 INSTALLED_APPS = [
@@ -68,8 +99,7 @@ WSGI_APPLICATION = 'django_template_repo.wsgi.application'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 用户模型
-# （仅在创建数据库前定义，后续不可更改）
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'core.User'  # FIXME: 更改用户模型（仅在创建数据库前定义，后续不可更改）
 
 # 数据库
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#databases
@@ -116,43 +146,13 @@ CACHES = {
     ),
 }
 
-# -------------------------------- 安全 --------------------------------
-
-APPEND_SLASH = False
-
-# 密码验证
-# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#auth-password-validators
-AUTH_PASSWORD_VALIDATORS = [
-    dict(
-        NAME='django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    ),
-    dict(
-        NAME='django.contrib.auth.password_validation.MinimumLengthValidator',
-        OPTIONS={
-            "min_length": 8,
-        },
-    ),
-    dict(
-        NAME='django.contrib.auth.password_validation.CommonPasswordValidator',
-    ),
-    dict(
-        NAME='django.contrib.auth.password_validation.NumericPasswordValidator',
-    ),
-]
-
-# --------------------------------
-
 # 静态文件 (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/zh-hans/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'  # 项目app以及项目本身的静态文件将被收集到这个目录，应配置为对外公开的文件路径，例如 /var/www/example.com/static/
 
-# --------------------------------
-
 # 用户上传内容
 # https://docs.djangoproject.com/zh-hans/4.2/topics/security/#user-uploaded-content-security
-
 MEDIA_URL = 'user-uploads/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
