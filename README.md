@@ -40,6 +40,12 @@ from django_template_repo.settings import *
 # 切记保密你的SECRET_KEY
 SECRET_KEY = '<随机生成的任意ASCII字符>'
 
+# ---------------- 以下配置是可选的 ----------------
+
+DEBUG = True  # 请勿在生产环境中设置为 True
+
+ALLOWED_HOSTS = ['*']  # DEBUG=False 时必须配置为非空列表
+
 DATABASES['default'] = dict(
     ENGINE='django.db.backends.postgresql',
     NAME='<数据库名称>',
@@ -48,12 +54,6 @@ DATABASES['default'] = dict(
     HOST='127.0.0.1',
     PORT='5432',
 )
-
-# ---------------- 以下配置是可选的 ----------------
-
-DEBUG = True  # 请勿在生产环境中设置为 True
-
-ALLOWED_HOSTS = ['*']  # DEBUG=False 时必须配置为非空列表
 
 CACHES['default'] = dict(
     BACKEND='django.core.cache.backends.redis.RedisCache',

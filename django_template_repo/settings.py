@@ -16,6 +16,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOGS_DIR = BASE_DIR / 'logs'
 APPS_DIR = BASE_DIR / 'apps'
 
+# -------------------------------- 核心 --------------------------------
+
+INSTALLED_APPS = [
+    # 内置 app
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    # 三方 app
+    'rest_framework',
+
+    # 项目 app
+    'apps.core.app_conf.CoreConfig',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+WSGI_APPLICATION = 'django_template_repo.wsgi.application'
+ASGI_APPLICATION = 'django_template_repo.asgi.application'
+
 # -------------------------------- 安全 --------------------------------
 
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#secret-key
@@ -23,9 +54,9 @@ SECRET_KEY = None
 
 DEBUG = False
 
-ALLOWED_HOSTS = []  # DEBUG=False 时必须配置为非空列表
-
-APPEND_SLASH = False
+ALLOWED_HOSTS = [  # DEBUG=False 时必须配置为非空列表
+    'localhost',
+]
 
 # 密码验证
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#auth-password-validators
@@ -47,54 +78,9 @@ AUTH_PASSWORD_VALIDATORS = [
     ),
 ]
 
-# -------------------------------- 核心 --------------------------------
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'apps.core.app_conf.CoreConfig',
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'django_template_repo.urls'
-
-TEMPLATES = [
-    dict(
-        BACKEND='django.template.backends.django.DjangoTemplates',
-        DIRS=[
-            BASE_DIR / 'templates',
-        ],
-        APP_DIRS=True,
-        OPTIONS={
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    ),
-]
-
-WSGI_APPLICATION = 'django_template_repo.wsgi.application'
-
 # -------------------------------- 存储 --------------------------------
 
-# 主键字段的默认类型
-# 注意：每个app都可以配置app范围内的主键字段默认类型
+# 全局主键字段默认类型
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -104,6 +90,10 @@ AUTH_USER_MODEL = 'core.User'  # FIXME: 更改用户模型（仅在创建数据�
 # 数据库
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#databases
 DATABASES = {
+    'default': dict(
+        ENGINE='django.db.backends.sqlite3',
+        NAME=':memory:',
+    ),
     'template_postgresql': dict(
         ENGINE='django.db.backends.postgresql',
         NAME='<数据库名称>',
@@ -137,36 +127,51 @@ DATABASES = {
 # 缓存
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#caches
 CACHES = {
+    'default': dict(
+        BACKEND='django.core.cache.backends.locmem.LocMemCache',
+    ),
     'template_redis': dict(
         BACKEND='django.core.cache.backends.redis.RedisCache',
         LOCATION='redis://127.0.0.1:6379/0',
     ),
-    'template_memory': dict(
-        BACKEND='django.core.cache.backends.locmem.LocMemCache',
-    ),
 }
 
-# 静态文件 (CSS, JavaScript, Images)
+# 静态文件
+# 项目app以及项目本身的静态文件将被收集到这个目录，应配置为对外公开的文件路径，例如 /var/www/example.com/static/
 # https://docs.djangoproject.com/zh-hans/4.2/howto/static-files/
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'  # 项目app以及项目本身的静态文件将被收集到这个目录，应配置为对外公开的文件路径，例如 /var/www/example.com/static/
+STATIC_ROOT = BASE_DIR / 'static'
 
 # 用户上传内容
 # https://docs.djangoproject.com/zh-hans/4.2/topics/security/#user-uploaded-content-security
-MEDIA_URL = 'user-uploads/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = 'uploads/'
+MEDIA_ROOT = BASE_DIR / 'uploads'
 
-# -------------------------------- 国际化 --------------------------------
-# Internationalization
-# https://docs.djangoproject.com/zh-hans/4.2/topics/i18n/
+# -------------------------------- 路由 --------------------------------
 
-LANGUAGE_CODE = 'zh-hans'
+ROOT_URLCONF = 'django_template_repo.urls'
 
-TIME_ZONE = 'UTC'
+APPEND_SLASH = False
 
-USE_I18N = True
+# -------------------------------- 模板 --------------------------------
 
-USE_TZ = True
+TEMPLATES = [
+    dict(
+        BACKEND='django.template.backends.django.DjangoTemplates',
+        DIRS=[
+            BASE_DIR / 'templates',
+        ],
+        APP_DIRS=True,
+        OPTIONS={
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    ),
+]
 
 # -------------------------------- 日志 --------------------------------
 
@@ -265,3 +270,32 @@ LOGGING = dict(
         ),
     },
 )
+
+# -------------------------------- 国际化 --------------------------------
+# Internationalization
+# https://docs.djangoproject.com/zh-hans/4.2/topics/i18n/
+
+LANGUAGE_CODE = 'zh-hans'
+
+TIME_ZONE = 'Asia/Shanghai'
+
+USE_I18N = True
+
+USE_TZ = True
+
+DATE_FORMAT = 'Y-m-d'
+TIME_FORMAT = 'H:i:s'
+DATETIME_FORMAT = f'{DATE_FORMAT} {TIME_FORMAT}'
+
+# -------------------------------- 生态框架 --------------------------------
+
+# https://www.django-rest-framework.org/api-guide/settings/
+REST_FRAMEWORK = dict(
+    DATE_FORMAT='%Y-%m-%d',
+    TIME_FORMAT='%H:%M:%S',
+    DATETIME_FORMAT='%Y-%m-%d %H:%M:%S',
+)
+
+# -------------------------------- 自定义配置 --------------------------------
+
+# ...
