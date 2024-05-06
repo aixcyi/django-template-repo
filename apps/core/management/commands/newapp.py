@@ -52,7 +52,7 @@ class Command(TemplateCommand):
 
         app_conf = target / "apps.py"
         if app_conf.exists():
-            app_conf.rename(target / "app_conf.py")
+            app_conf.rename(target / "configs.py")
 
         self.handle_with_template(target, with_urls, "urls.py", TMP_URLS)
         self.handle_with_template(target, with_serializers, "serializers.py", TMP_SERIALIZERS)

@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # 项目 app
-    'apps.core.app_conf.CoreConfig',
+    'apps.core.configs.CoreConfig',
 ]
 
 MIDDLEWARE = [
