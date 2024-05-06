@@ -32,43 +32,7 @@ Django 4.2 项目的模板仓库。
 
 ./django_template_repo/settings_*.py 不会被纳入版本管理，你可以通过创建不同命名的配置来实现生产环境和开发环境的隔离，比如用 `settings_dev.py` 配置开发环境，用 `settings_prod.py` 来配置生产环境。
 
-```python
-from django_template_repo.settings import *
-
-# ---------------- 以下配置是必须的 ----------------
-
-# 切记保密你的SECRET_KEY
-SECRET_KEY = '<随机生成的任意ASCII字符>'
-
-# ---------------- 以下配置是可选的 ----------------
-
-DEBUG = True  # 请勿在生产环境中设置为 True
-
-ALLOWED_HOSTS = ['*']  # DEBUG=False 时必须配置为非空列表
-
-DATABASES['default'] = dict(
-    ENGINE='django.db.backends.postgresql',
-    NAME='<数据库名称>',
-    USER='postgres',
-    PASSWORD='<数据库密码>',
-    HOST='127.0.0.1',
-    PORT='5432',
-)
-
-CACHES['default'] = dict(
-    BACKEND='django.core.cache.backends.redis.RedisCache',
-    LOCATION='redis://127.0.0.1:6379/<序列号码>',
-)
-
-LOGS_DIR.mkdir(exist_ok=True)  # 确保日志目录一定存在
-
-# 把 Django 接收到的所有请求打印到控制台中。
-LOGGING['loggers']['django.request']['handlers'] = ['Console', 'RequestRecorder']
-
-# 更多对 settings.py 的自定义覆盖……
-```
-
-使用以下代码可以快速生成十个随机 `SECRET_KEY` 备选：
+仅有 `SECRET_KEY` 必须进行配置。使用以下代码可以快速生成十个随机 `SECRET_KEY` 备选：
 
 ```python
 from base64 import b85encode
@@ -86,4 +50,75 @@ for _ in range(10):
 
 ```shell
 python manage.py newapp APPNAME -su
+```
+
+## 配置模板
+
+### 本地调试环境
+
+```python
+from django_template_repo.settings import *
+
+SECRET_KEY = '<随机生成的任意ASCII字符>'
+
+DEBUG = True
+
+ALLOWED_HOSTS = [
+   '*',
+]
+
+DATABASES['default'] = dict(
+    ENGINE='django.db.backends.postgresql',
+    NAME='postgres',  # 你的数据库名称
+    USER='postgres',  # 你的用户名
+    PASSWORD='',  # 你的密码
+    HOST='127.0.0.1',
+    PORT='5432',
+)
+
+CACHES['default'] = dict(
+    BACKEND='django.core.cache.backends.redis.RedisCache',
+    LOCATION='redis://127.0.0.1:6379/0',
+)
+
+# 确保目录一定存在
+LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
+MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
+STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
+
+# 把 Django 接收到的所有请求打印到控制台中。
+LOGGING['loggers']['django.request']['handlers'] = ['Console', 'RequestRecorder']
+```
+
+### 线上环境
+
+```python
+from django_template_repo.settings import *
+
+SECRET_KEY = '<随机生成的任意ASCII字符>'
+
+DEBUG = False
+
+ALLOWED_HOSTS = [
+   '.localhost',
+   '127.0.0.1',
+   '[::1]',
+]
+
+DATABASES['default'] = dict(
+    ENGINE='django.db.backends.postgresql',
+    NAME='postgres',  # 你的数据库名称
+    USER='postgres',  # 你的用户名
+    PASSWORD='',  # 你的密码
+    HOST='127.0.0.1',
+    PORT='5432',
+)
+
+CACHES['default'] = dict(
+    BACKEND='django.core.cache.backends.redis.RedisCache',
+    LOCATION='redis://127.0.0.1:6379/0',
+)
+
+# 确保目录一定存在
+LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
 ```
