@@ -28,11 +28,16 @@ Django 4.2 项目的模板仓库。
 
 ### 配置设置
 
-> 参见 [Django Settings](https://docs.djangoproject.com/zh-hans/4.2/ref/settings/)、[Django REST Framework Settings](https://www.django-rest-framework.org/api-guide/settings/)
+> - [Django Settings 快速配置](https://docs.djangoproject.com/zh-hans/4.2/topics/settings/)
+> - [Django Settings 完整配置列表](https://docs.djangoproject.com/zh-hans/4.2/ref/settings/)
+> - [Django REST Framework Settings](https://www.django-rest-framework.org/api-guide/settings/)
 
-./django_template_repo/settings_*.py 不会被纳入版本管理，你可以通过创建不同命名的配置来实现生产环境和开发环境的隔离，比如用 `settings_dev.py` 配置开发环境，用 `settings_prod.py` 来配置生产环境。
+./django_template_repo/settings_*.py 不会被纳入版本管理，
+你可以通过创建不同命名的配置来实现生产环境和开发环境的隔离，
+比如用 `settings_dev.py` 配置开发环境，用 `settings_prod.py` 来配置生产环境。
 
-仅有 `SECRET_KEY` 必须进行配置。使用以下代码可以快速生成十个随机 `SECRET_KEY` 备选：
+仅 `SECRET_KEY` 是必须进行配置的。
+使用以下代码可以快速生成十个随机 `SECRET_KEY` 备选：
 
 ```python
 from base64 import b85encode
@@ -54,7 +59,9 @@ python manage.py newapp APPNAME -su
 
 ## 配置模板
 
-### 本地调试环境
+### settings_dev.py
+
+适用于本地调试环境。
 
 ```python
 from django_template_repo.settings import *
@@ -73,7 +80,9 @@ MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
 STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
 ```
 
-### 线上环境
+### settings_prod.py
+
+适用于生产环境。
 
 ```python
 from django_template_repo.settings import *
@@ -92,7 +101,9 @@ ALLOWED_HOSTS = [
 LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
 ```
 
-### PostgreSQL
+### PostgreSQL 配置模板
+
+[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#postgresql-notes)
 
 ```python
 DATABASES = {
@@ -107,7 +118,9 @@ DATABASES = {
 }
 ```
 
-### MySQL
+### MySQL 配置模板
+
+[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#mysql-notes)
 
 ```python
 DATABASES = {
@@ -122,7 +135,9 @@ DATABASES = {
 }
 ```
 
-### Oracle
+### Oracle 配置模板
+
+[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#oracle-notes)
 
 ```python
 DATABASES = {
@@ -137,7 +152,9 @@ DATABASES = {
 }
 ```
 
-### SQLite
+### SQLite 配置模板
+
+[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#sqlite-notes)
 
 ```python
 from django_template_repo.settings import BASE_DIR
@@ -150,7 +167,9 @@ DATABASES = {
 }
 ```
 
-### Redis
+### Redis 配置模板
+
+[设置缓存](https://docs.djangoproject.com/zh-hans/4.2/topics/cache/#redis)
 
 ```python
 CACHES = {

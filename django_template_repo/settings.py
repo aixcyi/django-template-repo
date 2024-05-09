@@ -89,6 +89,7 @@ AUTH_USER_MODEL = 'core.User'  # FIXME: 更改用户模型（仅在创建数据�
 
 # 数据库
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#databases
+# https://docs.djangoproject.com/zh-hans/5.0/ref/databases/
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.sqlite3',
@@ -98,6 +99,7 @@ DATABASES = {
 
 # 缓存
 # https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#caches
+# https://docs.djangoproject.com/zh-hans/4.2/topics/cache/
 CACHES = {
     'default': dict(
         BACKEND='django.core.cache.backends.locmem.LocMemCache',
