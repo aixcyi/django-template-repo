@@ -5,11 +5,11 @@ Django 4.2 项目的模板仓库。
 ## 优点
 
 - 可以隔离不同环境的配置。
-- 更加易读的 settings.py 。
-- 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会创建 `order_goods_sku_info` 表，而不会是 `order_goodsskuinfo` 。
-- 自带 alarms.log、records.log、requests.log 三个日志配置。
-- 自定义 `User` 模型（放在自带的 `core` app里）。
+- 更加易读的 `settings.py` 。
+- 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会创建 `order_goods_sku_info` 表，而不是 `order_goodsskuinfo` 。
+- 预设 `alarms.log` 和 `records.log` 两个日志文件，以及仅在调试模式才会打印日志的控制台。
 - 将 Django App 集中存放在 ./apps 目录下。
+- 预设继承 `AbstractUser` 来自定义用户的 `User` 模型（放在 `core` 这个app里）。
 - 显式声明每个模型的 `id` 的字段类型。
 
 ## 用法
@@ -75,7 +75,7 @@ from django_template_repo.settings import *
 DEBUG = True
 SECRET_KEY = '<随机生成的任意ASCII字符>'
 ALLOWED_HOSTS = [
-   '*',
+    '*',
 ]
 
 # 确保目录一定存在
