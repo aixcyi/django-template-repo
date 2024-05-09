@@ -94,34 +94,6 @@ DATABASES = {
         ENGINE='django.db.backends.sqlite3',
         NAME=':memory:',
     ),
-    'template_postgresql': dict(
-        ENGINE='django.db.backends.postgresql',
-        NAME='<数据库名称>',
-        USER='postgres',
-        PASSWORD='',
-        HOST='127.0.0.1',
-        PORT='5432',
-    ),
-    'template_mysql': dict(
-        ENGINE='django.db.backends.mysql',
-        NAME='<数据库名称>',
-        USER='root',
-        PASSWORD='',
-        HOST='127.0.0.1',
-        PORT='3306',
-    ),
-    'template_oracle': dict(
-        ENGINE='django.db.backends.oracle',
-        NAME='<数据库名称>',
-        USER='system',
-        PASSWORD='',
-        HOST='127.0.0.1',
-        PORT='1521',
-    ),
-    'template_sqlite3': dict(
-        ENGINE='django.db.backends.sqlite3',
-        NAME=BASE_DIR / '[数据库名称].sqlite3',
-    ),
 }
 
 # 缓存
@@ -130,14 +102,9 @@ CACHES = {
     'default': dict(
         BACKEND='django.core.cache.backends.locmem.LocMemCache',
     ),
-    'template_redis': dict(
-        BACKEND='django.core.cache.backends.redis.RedisCache',
-        LOCATION='redis://127.0.0.1:6379/0',
-    ),
 }
 
-# 静态文件
-# 项目app以及项目本身的静态文件将被收集到这个目录，应配置为对外公开的文件路径，例如 /var/www/example.com/static/
+# 静态文件（应配置为对外公开的文件路径）
 # https://docs.djangoproject.com/zh-hans/4.2/howto/static-files/
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'

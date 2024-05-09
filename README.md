@@ -67,27 +67,10 @@ ALLOWED_HOSTS = [
    '*',
 ]
 
-DATABASES['default'] = dict(
-    ENGINE='django.db.backends.postgresql',
-    NAME='postgres',  # 你的数据库名称
-    USER='postgres',  # 你的用户名
-    PASSWORD='',  # 你的密码
-    HOST='127.0.0.1',
-    PORT='5432',
-)
-
-CACHES['default'] = dict(
-    BACKEND='django.core.cache.backends.redis.RedisCache',
-    LOCATION='redis://127.0.0.1:6379/0',
-)
-
 # 确保目录一定存在
 LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
 MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
 STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
-
-# 把 Django 接收到的所有请求打印到控制台中。
-LOGGING['loggers']['django.request']['handlers'] = ['Console', 'RequestRecorder']
 ```
 
 ### 线上环境
@@ -105,20 +88,75 @@ ALLOWED_HOSTS = [
    '[::1]',
 ]
 
-DATABASES['default'] = dict(
-    ENGINE='django.db.backends.postgresql',
-    NAME='postgres',  # 你的数据库名称
-    USER='postgres',  # 你的用户名
-    PASSWORD='',  # 你的密码
-    HOST='127.0.0.1',
-    PORT='5432',
-)
-
-CACHES['default'] = dict(
-    BACKEND='django.core.cache.backends.redis.RedisCache',
-    LOCATION='redis://127.0.0.1:6379/0',
-)
-
 # 确保目录一定存在
 LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
+```
+
+### PostgreSQL
+
+```python
+DATABASES = {
+    'default': dict(
+        ENGINE='django.db.backends.postgresql',
+        NAME='<数据库名称>',
+        USER='postgres',
+        PASSWORD='<账号密码>',
+        HOST='127.0.0.1',
+        PORT='5432',
+    ),
+}
+```
+
+### MySQL
+
+```python
+DATABASES = {
+    'default': dict(
+        ENGINE='django.db.backends.mysql',
+        NAME='<数据库名称>',
+        USER='root',
+        PASSWORD='<账号密码>',
+        HOST='127.0.0.1',
+        PORT='3306',
+    ),
+}
+```
+
+### Oracle
+
+```python
+DATABASES = {
+    'default': dict(
+        ENGINE='django.db.backends.oracle',
+        NAME='<数据库名称>',
+        USER='system',
+        PASSWORD='<账号密码>',
+        HOST='127.0.0.1',
+        PORT='1521',
+    ),
+}
+```
+
+### SQLite
+
+```python
+from django_template_repo.settings import BASE_DIR
+
+DATABASES = {
+    'default': dict(
+        ENGINE='django.db.backends.sqlite3',
+        NAME=BASE_DIR / '数据库名称.sqlite3',
+    ),
+}
+```
+
+### Redis
+
+```python
+CACHES = {
+    'default': dict(
+        BACKEND='django.core.cache.backends.redis.RedisCache',
+        LOCATION='redis://127.0.0.1:6379/0',
+    ),
+}
 ```
