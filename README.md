@@ -49,9 +49,14 @@ for _ in range(10):
     print(key)
 ```
 
-### 创建应用
+### 创建 App
 
-在 ./apps 内创建一个带有 serializers.py（-s）和 urls.py（-u）的 Django App 。
+可以通过 PyCharm 插件 [Tiny Snake](https://plugins.jetbrains.com/plugin/24140-tiny-snake/)
+快速创建带有 `serializers.py` 和 `urls.py` 的 App 。
+
+亦或者通过 django-admin 命令在 ./apps 内创建，参数与
+[`startapp`](https://docs.djangoproject.com/zh-hans/4.2/ref/django-admin/#startapp)
+相近，并且可以分别通过指定 `-s` 和 `-u` 标志来创建 `serializers.py` 和 `urls.py` 。
 
 ```shell
 python manage.py newapp APPNAME -su
