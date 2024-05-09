@@ -80,10 +80,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # -------------------------------- 存储 --------------------------------
 
-# 全局主键字段默认类型
-# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#default-auto-field
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 # 用户模型
 AUTH_USER_MODEL = 'core.User'  # FIXME: 更改用户模型（仅在创建数据库前定义，后续不可更改）
 
