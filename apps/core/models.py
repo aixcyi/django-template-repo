@@ -19,6 +19,7 @@ class User(AbstractUser, metaclass=SnakeModel):
     """
     系统用户。
     """
+    id = models.BigAutoField('ID', primary_key=True)
     username = models.CharField('用户名', max_length=50, unique=True, validators=[AbstractUser.username_validator])
     nickname = models.CharField('昵称', max_length=100, null=True, default=None)
 

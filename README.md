@@ -10,6 +10,7 @@ Django 4.2 项目的模板仓库。
 - 自带 alarms.log、records.log、requests.log 三个日志配置。
 - 自定义 `User` 模型（放在自带的 `core` app里）。
 - 将 Django App 集中存放在 ./apps 目录下。
+- 显式声明每个模型的 `id` 的字段类型。
 
 ## 用法
 
