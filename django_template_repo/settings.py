@@ -168,17 +168,16 @@ LOGGING = dict(
             ),
         ),
         # 自定义格式化器：https://docs.python.org/zh-cn/3/library/logging.config.html#user-defined-objects
-        'printing': {
+        'printable': {
             '()': 'logging.Formatter',
             'fmt': (
                 '[%(asctime)s] '
-                '[%(name)s/%(levelname)s] '
+                '[%(levelname)s] '  # 控制台里没必要打印日志的记录器
                 '[%(module)s.%(funcName)s:%(lineno)d]: '
                 '%(message)s'
             ),
             '.': {
-                'default_time_format': '%H:%M:%S',
-                'default_msec_format': '%s,%03d',
+                'default_time_format': '%H:%M:%S',  # 控制台只打印时间就够了，日期部分没必要打印
             },
         }
     },
@@ -189,30 +188,22 @@ LOGGING = dict(
         },
     },
     handlers={
-        'Console': dict_(
+        'console': dict_(
             class_='logging.StreamHandler',
             level='DEBUG',
-            formatter='printing',
+            filters=['require_debugging'],  # 仅在调试模式下往控制台打印日志
+            formatter='printable',
         ),
-        'RequestRecorder': dict_(
+        'recorder': dict_(
             class_='logging.handlers.TimedRotatingFileHandler',
-            level='DEBUG',
-            formatter='standard',
-            filename=LOGS_DIR / 'requests.log',
-            encoding='UTF-8',
-            backupCount=365,
-            when='d',
-        ),
-        'ProjectRecorder': dict_(
-            class_='logging.handlers.TimedRotatingFileHandler',
-            level='DEBUG',
+            level='INFO',
             formatter='standard',
             filename=LOGS_DIR / 'records.log',
             encoding='UTF-8',
             backupCount=365,
             when='d',
         ),
-        'ProjectAlarmer': dict_(
+        'alarmer': dict_(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='WARNING',
             formatter='verbose',
@@ -226,14 +217,20 @@ LOGGING = dict(
         'django.request': dict(
             level='INFO',
             filters=[],
-            handlers=['RequestRecorder'],
+            handlers=['console', 'recorder', 'alarmer'],
+            propagate=False,
+        ),
+        'django': dict(
+            level='INFO',
+            filters=[],
+            handlers=['console'],
             propagate=False,
         ),
         'project': dict(
             level='DEBUG',
             filters=[],
-            handlers=['ProjectRecorder', 'ProjectAlarmer'],
-            propagate=False,
+            handlers=['console', 'recorder', 'alarmer'],
+            propagate=False,  # 项目自身产生的日志没必要再往上级传递
         ),
     },
 )
