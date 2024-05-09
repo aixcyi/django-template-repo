@@ -55,7 +55,9 @@ SECRET_KEY = None
 DEBUG = False
 
 ALLOWED_HOSTS = [  # DEBUG=False 时必须配置为非空列表
-    'localhost',
+    '.localhost',
+    '127.0.0.1',
+    '[::1]',
 ]
 
 # 密码验证

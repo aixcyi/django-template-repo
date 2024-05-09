@@ -71,10 +71,8 @@ python manage.py newapp APPNAME -su
 ```python
 from django_template_repo.settings import *
 
-SECRET_KEY = '<随机生成的任意ASCII字符>'
-
 DEBUG = True
-
+SECRET_KEY = '<随机生成的任意ASCII字符>'
 ALLOWED_HOSTS = [
    '*',
 ]
@@ -93,14 +91,6 @@ STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
 from django_template_repo.settings import *
 
 SECRET_KEY = '<随机生成的任意ASCII字符>'
-
-DEBUG = False
-
-ALLOWED_HOSTS = [
-   '.localhost',
-   '127.0.0.1',
-   '[::1]',
-]
 
 # 确保目录一定存在
 LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
