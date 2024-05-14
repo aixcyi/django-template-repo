@@ -69,7 +69,7 @@ AUTH_PASSWORD_VALIDATORS = [
     dict(
         NAME='django.contrib.auth.password_validation.MinimumLengthValidator',
         OPTIONS={
-            "min_length": 8,
+            'min_length': 8,
         },
     ),
     dict(
@@ -168,7 +168,7 @@ LOGGING = dict(
             ),
         ),
         # 自定义格式化器：https://docs.python.org/zh-cn/3/library/logging.config.html#user-defined-objects
-        'printable': {
+        'printing': {
             '()': 'logging.Formatter',
             'fmt': (
                 '[%(asctime)s] '
@@ -188,11 +188,17 @@ LOGGING = dict(
         },
     },
     handlers={
+        'monitor': dict_(
+            class_='logging.StreamHandler',
+            level='INFO',
+            filters=[],
+            formatter='standard',
+        ),
         'console': dict_(
             class_='logging.StreamHandler',
             level='DEBUG',
             filters=['require_debugging'],  # 仅在调试模式下往控制台打印日志
-            formatter='printable',
+            formatter='printing',
         ),
         'recorder': dict_(
             class_='logging.handlers.TimedRotatingFileHandler',
@@ -214,23 +220,27 @@ LOGGING = dict(
         ),
     },
     loggers={
+        'django': dict(
+            level='INFO',
+            filters=[],
+            handlers=['console'],
+        ),
+        'django.server': dict(
+            level='INFO',
+            filters=[],
+            handlers=['monitor'],
+            propagate=False,
+        ),
         'django.request': dict(
             level='INFO',
             filters=[],
             handlers=['console', 'recorder', 'alarmer'],
             propagate=False,
         ),
-        'django': dict(
-            level='INFO',
-            filters=[],
-            handlers=['console'],
-            propagate=False,
-        ),
         'project': dict(
             level='DEBUG',
             filters=[],
             handlers=['console', 'recorder', 'alarmer'],
-            propagate=False,  # 项目自身产生的日志没必要再往上级传递
         ),
     },
 )
