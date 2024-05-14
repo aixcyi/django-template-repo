@@ -1,16 +1,19 @@
 # django template repo
 
-Django 4.2 项目的模板仓库。
+Django 项目模板仓库。
 
-## 优点
+## 特性
 
 - 可以隔离不同环境的配置。
 - 更加易读的 `settings.py` 。
-- 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会创建 `order_goods_sku_info` 表，而不是 `order_goodsskuinfo` 。
-- 预设 `alarms.log` 和 `records.log` 两个日志文件，以及仅在调试模式才会打印日志的控制台。
+- 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会默认创建 `order_goods_sku_info` 表，而不是 `order_goodsskuinfo` 。
+- 预设 `alarms.log` 和 `records.log` 两个日志文件，控制台仅在调试模式才会打印。
 - 将 Django App 集中存放在 ./apps 目录下。
 - 预设继承 `AbstractUser` 来自定义用户的 `User` 模型（放在 `core` 这个app里）。
-- 显式声明每个模型的 `id` 的字段类型。
+
+## 兼容性
+
+以 Django 4.2 为基准创建，目前兼容 Django 3.x｜4.x｜5.x，兼容 Python 3.6 - 3.12。
 
 ## 用法
 
@@ -20,12 +23,13 @@ Django 4.2 项目的模板仓库。
 2. 克隆刚刚创建的仓库；
 3. 使用 IDE 打开项目，将文件夹 ./django_template_repo 重命名为你的项目名，同时，连带重命名 **所有** 相关引用和字符串；
 4. 根据需要创建虚拟环境，并切换到虚拟环境中；
-5. 在 ./django_template_repo 中创建自己的配置文件 settings_dev.py ；
-6. 将以下文件里的环境变量 `DJANGO_SETTINGS_MODULE` 的值修改为 `"django_template_repo.settings_dev"` ；
+5. `pip install -r requirements.txt` 安装依赖；
+6. 在 ./django_template_repo 中创建自己的配置文件 settings_dev.py ；
+7. 将以下文件里的环境变量 `DJANGO_SETTINGS_MODULE` 的值修改为 `"django_template_repo.settings_dev"` ；
    - ./manage.py
    - ./django_template_repo/asgi.py
    - ./django_template_repo/wsgi.py
-7. `python manage.py runserver` 运行项目。
+8. `python manage.py runserver` 运行项目。
 
 ### 配置设置
 
