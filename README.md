@@ -15,6 +15,36 @@ Django 项目模板仓库。
 
 以 Django 4.2 为基准创建，目前兼容 Django 3.x｜4.x｜5.x，兼容 Python 3.6 - 3.12。
 
+## 结构
+
+### 目录结构
+
+- `./apps` 存放项目内的所有 Django App。
+- `./commons` 存放对于框架的定制，或仅适用于单个项目的工具。
+- `./django_template_repo` 存放 Django Settings、总路由等配置。
+- `./utils` 存放（可以跨项目的）通用工具。
+
+### 日志记录器
+
+- `""` 根记录器。
+  - `project` 项目内的根记录器。
+  - `django` 框架使用的根记录器，由框架自带。
+    - `django.server` 服务器部分的日志。不向上传递。
+    - `django.request` 请求部分的日志。不向上传递。
+    - 更多内置的记录器见[默认的日志定义](https://docs.djangoproject.com/zh-hans/4.2/ref/logging/#default-logging-definition)。
+
+### 日志处理器
+
+| 名称         | 目标                   | 级别        | 格式 | 用途                     |
+|------------|----------------------|-----------|----|------------------------|
+| `monitor`  | 控制台                  | `INFO`    | 标准 | 专供 `django.server` 使用。 |
+| `console`  | 控制台                  | `DEBUG`   | 标准 | 处理所有控制台打印。             |
+| `recorder` | `./logs/records.log` | `INFO`    | 标准 | 处理所有非调试日志。             |
+| `alarmer`  | `./logs/alarms.log`  | `WARNING` | 详细 | 处理所有警告和异常。             |
+
+- 日志处理器默认无条件触发。`console` 仅在 `DEBUG = True` 时触发。
+- `console` 的打印格式基于标准格式，但去除了时刻中的日期部分。
+
 ## 用法
 
 > [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/4.2/faq/install/#what-python-version-can-i-use-with-django)
