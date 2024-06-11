@@ -53,8 +53,8 @@ def resp200(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **k
 
     可能包含以下字段：
 
-    - ``prev`` 表示上一页的单个请求 URL，必定为 string 且不为空字符串。
-    - ``next`` 表示下一页的单个请求 URL，必定为 string 且不为空字符串。
+    - ``prev`` 表示上一页的单个请求 URL，可以为 string 或 ``null``，不为空字符串。
+    - ``next`` 表示下一页的单个请求 URL，可以为 string 或 ``null``，不为空字符串。
     - ``pages`` 表示总页数，必定为 integer（int64）。
     - ``error`` 表示需要提供给外部的内部错误，一般为序列化器校验器产生的嵌套数组或嵌套对象，但也可以是其它任意类型。
 
@@ -91,10 +91,6 @@ def _resp(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **kwa
     assert type(body['code']) is int, 'API响应的 "code" 字段必须是 int 类型。'
     assert type(body['message']) is str, 'API响应的 "message" 字段必须是 str 类型。'
     assert body['message'], 'API响应的 "message" 字段不允许为空字符串。'
-    if 'prev' in body:
-        assert type(body['prev']) is str and body['prev'], 'API响应的 "prev" 字段必须是 str 类型并且不允许为空字符串。'
-    if 'next' in body:
-        assert type(body['next']) is str and body['next'], 'API响应的 "next" 字段必须是 str 类型并且不允许为空字符串。'
     if 'pages' in body:
         assert type(body['pages']) is int, 'API响应的 "pages" 字段必须是 int 类型。'
     return body
