@@ -4,8 +4,8 @@ django_template_repo 的项目设置。
 通过 `Django Template Repo <https://github.com/aixcyi/django-template-repo>`_
 模板创建；模板本身使用 Django 4.2.5 通过 'django-admin startproject' 命令生成。
 
-- `settings.py 快速配置 <https://docs.djangoproject.com/zh-hans/4.2/topics/settings/>`_
-- `settings.py 完整配置列表 <https://docs.djangoproject.com/zh-hans/4.2/ref/settings/>`_
+- `settings.py 快速配置 <https://docs.djangoproject.com/zh-hans/5.2/topics/settings/>`_
+- `settings.py 完整配置列表 <https://docs.djangoproject.com/zh-hans/5.2/ref/settings/>`_
 """
 
 from pathlib import Path
@@ -49,7 +49,7 @@ ASGI_APPLICATION = 'django_template_repo.asgi.application'
 
 # -------------------------------- 安全 --------------------------------
 
-# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#secret-key
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#secret-key
 SECRET_KEY = None
 
 DEBUG = False
@@ -61,7 +61,7 @@ ALLOWED_HOSTS = [  # DEBUG=False 时必须配置为非空列表
 ]
 
 # 密码验证
-# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     dict(
         NAME='django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -86,8 +86,8 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'core.User'  # FIXME: 更改用户模型（仅在创建数据库前定义，后续不可更改）
 
 # 数据库
-# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#databases
-# https://docs.djangoproject.com/zh-hans/5.0/ref/databases/
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#databases
+# https://docs.djangoproject.com/zh-hans/5.2/ref/databases/
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.sqlite3',
@@ -96,8 +96,8 @@ DATABASES = {
 }
 
 # 缓存
-# https://docs.djangoproject.com/zh-hans/4.2/ref/settings/#caches
-# https://docs.djangoproject.com/zh-hans/4.2/topics/cache/
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#caches
+# https://docs.djangoproject.com/zh-hans/5.2/topics/cache/
 CACHES = {
     'default': dict(
         BACKEND='django.core.cache.backends.locmem.LocMemCache',
@@ -105,12 +105,12 @@ CACHES = {
 }
 
 # 静态文件（应配置为对外公开的文件路径）
-# https://docs.djangoproject.com/zh-hans/4.2/howto/static-files/
+# https://docs.djangoproject.com/zh-hans/5.2/howto/static-files/
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
 # 用户上传内容
-# https://docs.djangoproject.com/zh-hans/4.2/topics/security/#user-uploaded-content-security
+# https://docs.djangoproject.com/zh-hans/5.2/topics/security/#user-uploaded-content-security
 MEDIA_URL = 'uploads/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
@@ -142,7 +142,7 @@ TEMPLATES = [
 
 # -------------------------------- 日志 --------------------------------
 
-# 日志模块的配置：https://docs.djangoproject.com/zh-hans/4.2/topics/logging/#configuring-logging
+# 日志模块的配置：https://docs.djangoproject.com/zh-hans/5.2/topics/logging/#configuring-logging
 # 配置字典架构：https://docs.python.org/zh-cn/3/library/logging.config.html#logging-config-dictschema
 LOGGING = dict(
     version=1,
@@ -247,7 +247,7 @@ LOGGING = dict(
 
 # -------------------------------- 国际化 --------------------------------
 # Internationalization
-# https://docs.djangoproject.com/zh-hans/4.2/topics/i18n/
+# https://docs.djangoproject.com/zh-hans/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'zh-hans'
 

@@ -32,7 +32,7 @@ Django 项目模板仓库。
   - `django` 框架使用的根记录器，由框架自带。
     - `django.server` 服务器部分的日志。不向上传递。
     - `django.request` 请求部分的日志。不向上传递。
-    - 更多内置的记录器见[默认的日志定义](https://docs.djangoproject.com/zh-hans/4.2/ref/logging/#default-logging-definition)。
+    - 更多内置的记录器见[默认的日志定义](https://docs.djangoproject.com/zh-hans/5.2/ref/logging/#default-logging-definition)。
 
 ### 日志处理器
 
@@ -48,7 +48,7 @@ Django 项目模板仓库。
 
 ## 用法
 
-> [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/4.2/faq/install/#what-python-version-can-i-use-with-django)
+> [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/5.2/faq/install/#what-python-version-can-i-use-with-django)
 
 1. [从模板创建仓库 - GitHub](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) ；
 2. 克隆刚刚创建的仓库；
@@ -64,8 +64,8 @@ Django 项目模板仓库。
 
 ### 配置设置
 
-> - [Django Settings 快速配置](https://docs.djangoproject.com/zh-hans/4.2/topics/settings/)
-> - [Django Settings 完整配置列表](https://docs.djangoproject.com/zh-hans/4.2/ref/settings/)
+> - [Django Settings 快速配置](https://docs.djangoproject.com/zh-hans/5.2/topics/settings/)
+> - [Django Settings 完整配置列表](https://docs.djangoproject.com/zh-hans/5.2/ref/settings/)
 > - [Django REST Framework Settings](https://www.django-rest-framework.org/api-guide/settings/)
 
 ./django_template_repo/settings_*.py 不会被纳入版本管理，
@@ -91,7 +91,7 @@ for _ in range(10):
 快速创建带有 `serializers.py` 和 `urls.py` 的 App 。
 
 亦或者通过 django-admin 命令在 ./apps 内创建，参数与
-[`startapp`](https://docs.djangoproject.com/zh-hans/4.2/ref/django-admin/#startapp)
+[`startapp`](https://docs.djangoproject.com/zh-hans/5.2/ref/django-admin/#startapp)
 相近，并且可以分别通过指定 `-s` 和 `-u` 标志来创建 `serializers.py` 和 `urls.py` 。
 
 ```shell
@@ -134,7 +134,7 @@ LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
 
 ### PostgreSQL 配置模板
 
-[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#postgresql-notes)
+[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#postgresql-notes)
 
 ```python
 DATABASES = {
@@ -151,7 +151,7 @@ DATABASES = {
 
 ### MySQL 配置模板
 
-[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#mysql-notes)
+[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#mysql-notes)
 
 ```python
 DATABASES = {
@@ -168,7 +168,7 @@ DATABASES = {
 
 ### Oracle 配置模板
 
-[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#oracle-notes)
+[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#oracle-notes)
 
 ```python
 DATABASES = {
@@ -185,7 +185,7 @@ DATABASES = {
 
 ### SQLite 配置模板
 
-[注意事项](https://docs.djangoproject.com/zh-hans/4.2/ref/databases/#sqlite-notes)
+[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#sqlite-notes)
 
 ```python
 from django_template_repo.settings import BASE_DIR
@@ -200,7 +200,7 @@ DATABASES = {
 
 ### Redis 配置模板
 
-[设置缓存](https://docs.djangoproject.com/zh-hans/4.2/topics/cache/#redis)
+[设置缓存](https://docs.djangoproject.com/zh-hans/5.2/topics/cache/#redis)
 
 ```python
 CACHES = {
