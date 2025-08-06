@@ -1,3 +1,7 @@
+__all__ = [
+    'EasyViewSetMixin',
+]
+
 from typing import Any
 
 from django.utils.decorators import classonlymethod

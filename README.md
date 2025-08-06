@@ -10,6 +10,7 @@ Django 项目模板仓库。
 - 预设 `alarms.log` 和 `records.log` 两个日志文件，控制台仅在调试模式才会打印。
 - 将 Django App 集中存放在 ./apps 目录下。
 - 预设继承 `AbstractUser` 来自定义用户的 `User` 模型（放在 `core` 这个app里）。
+- 通过 `__all__` 约束包公开的符号。
 
 ## 兼容性
 
