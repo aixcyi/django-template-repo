@@ -212,3 +212,30 @@ CACHES = {
     ),
 }
 ```
+
+### 调试环境配置快速参考
+
+```python
+from django_template_repo.settings import *
+
+DEBUG = True
+SECRET_KEY = '<Z~Bhb@?39U0EcX31IKEQ^93GlQt-o-x8QXH#sE7=Ci?gJ4J49nOKir?WMR3`EhyjOt%uivqAZ!Ka;uL'
+ALLOWED_HOSTS = [
+    '*',
+]
+DATABASES['default'] = dict(
+    ENGINE='django.db.backends.postgresql',
+    NAME='django_template_repo',
+    USER='postgres',
+    PASSWORD='postgres',
+    HOST='127.0.0.1',
+    PORT='5432',
+)
+CACHES['default'] = dict(
+    BACKEND='django.core.cache.backends.redis.RedisCache',
+    LOCATION='redis://127.0.0.1:6379/11',
+)
+LOGS_DIR.mkdir(exist_ok=True)
+MEDIA_ROOT.mkdir(exist_ok=True)
+STATIC_ROOT.mkdir(exist_ok=True)
+```
