@@ -68,9 +68,9 @@ AUTH_PASSWORD_VALIDATORS = [
     ),
     dict(
         NAME='django.contrib.auth.password_validation.MinimumLengthValidator',
-        OPTIONS={
-            'min_length': 8,
-        },
+        OPTIONS=dict(
+            min_length=8,
+        ),
     ),
     dict(
         NAME='django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -83,7 +83,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # -------------------------------- 存储 --------------------------------
 
 # 用户模型
-AUTH_USER_MODEL = 'core.User'  # FIXME: 更改用户模型（仅在创建数据库前定义，后续不可更改）
+AUTH_USER_MODEL = 'core.User'  # TODO: 更改用户模型（仅在创建数据库前定义，后续不可更改）
 
 # 数据库
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#databases

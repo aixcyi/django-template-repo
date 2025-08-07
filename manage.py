@@ -6,6 +6,9 @@ import sys
 
 def main():
     """Run administrative tasks."""
+
+    # TODO: 根据实际导入的 settings 修改参数二
+    # 例如使用 ./django_template_repo/settings_dev.py 时修改为 'django_template_repo.settings_dev'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_template_repo.settings')
     try:
         from django.core.management import execute_from_command_line

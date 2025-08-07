@@ -14,11 +14,15 @@ Django 项目模板仓库。
 
 ## 兼容性
 
-以 Django 4.2 为基准创建，目前兼容 Django 3.x｜4.x｜5.x，兼容 Python 3.6 - 3.12。
+以 Django 4.2 为基准创建，目前兼容 Django 3.x｜4.x｜5.x，兼容 Python 3.6 - 3.13。
+
+> [!IMPORTANT]
+> 如果您使用 Python 3.11 以前（不含）的版本，需要修改
+> `commons.views.MeowModelViewSet` 内的处理逻辑。
 
 ## 结构
 
-### 目录结构
+### 目录结构（按依赖先后排序）
 
 - `./apps` 存放项目内的所有 Django App。
 - `./commons` 存放对于框架的定制，或仅适用于单个项目的工具。
@@ -48,18 +52,16 @@ Django 项目模板仓库。
 
 ## 用法
 
+> [!TIP]
 > [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/5.2/faq/install/#what-python-version-can-i-use-with-django)
 
-1. [从模板创建仓库 - GitHub](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) ；
+1. [从模板创建仓库（GitHub）](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)；
 2. 克隆刚刚创建的仓库；
-3. 使用 IDE 打开项目，将文件夹 ./django_template_repo 重命名为你的项目名，同时，连带重命名 **所有** 相关引用和字符串；
-4. 根据需要创建虚拟环境，并切换到虚拟环境中；
+3. 重命名文件夹 ./django_template_repo 及所有引用和字符串为你的 **项目名**；
+4. 根据需要创建并切换虚拟环境；
 5. `pip install -r requirements.txt` 安装依赖；
-6. 在 ./django_template_repo 中创建自己的配置文件 settings_dev.py ；
-7. 将以下文件里的环境变量 `DJANGO_SETTINGS_MODULE` 的值修改为 `"django_template_repo.settings_dev"` ；
-   - ./manage.py
-   - ./django_template_repo/asgi.py
-   - ./django_template_repo/wsgi.py
+6. 在 ./django_template_repo 中创建自定义配置文件 settings_dev.py；
+7. 查找所有以 `TODO` 开头的注释，并按照提示进行修改；
 8. `python manage.py runserver` 运行项目。
 
 ### 配置设置
@@ -73,7 +75,7 @@ Django 项目模板仓库。
 比如用 `settings_dev.py` 配置开发环境，用 `settings_prod.py` 来配置生产环境。
 
 仅 `SECRET_KEY` 是必须进行配置的。
-使用以下代码可以快速生成十个随机 `SECRET_KEY` 备选：
+使用以下代码可以快速生成随机 `SECRET_KEY` 以备选择：
 
 ```python
 from base64 import b85encode

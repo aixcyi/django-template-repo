@@ -6,7 +6,7 @@ __all__ = [
     'MeowModelViewSet',
 ]
 
-from http import HTTPMethod  # Python 3.11 新增
+from http import HTTPMethod  # TODO: Python 3.11 新增，请按照实际依赖进行修改
 
 from django.db import IntegrityError
 from rest_framework import mixins, status
@@ -117,6 +117,7 @@ class MeowModelViewSet(mixins.CreateModelMixin,
     def finalize_response(self, request, response: Response, *args, **kwargs):
         old = super().finalize_response(request, response, *args, **kwargs)
 
+        # TODO: Python 3.11 以前将判断 method 的逻辑改为直接判断 'GET', 'POST' 等字符串。
         method = HTTPMethod(request.method)
 
         if method == HTTPMethod.OPTIONS:
