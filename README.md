@@ -1,22 +1,23 @@
-# django template repo
+# Django Template Repo
 
-Django 项目模板仓库。
+Django 项目模板仓库，基于 `django-admin` 默认模板开发，倾向于前后端分离开发。
 
 ## 特性
 
 - 可以隔离不同环境的配置。
 - 更加易读的 `settings.py` 。
 - 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会默认创建 `order_goods_sku_info` 表，而不是 `order_goodsskuinfo` 。
-- 预设 `alarms.log` 和 `records.log` 两个日志文件，控制台仅在调试模式才会打印。
+- 预设两个日志文件 `./logs/alarms.log` 和 `./logs/records.log`，控制台仅在调试模式才会打印。
 - 将 Django App 集中存放在 ./apps 目录下。
 - 预设继承 `AbstractUser` 来自定义用户的 `User` 模型（放在 `core` 这个app里）。
 - 通过 `__all__` 约束包公开的符号。
 
 ## 兼容性
 
-以 Django 4.2 为基准创建，目前兼容 Django 3.x｜4.x｜5.x，兼容 Python 3.6 - 3.13。
+以 Django 4.2 为基准创建，目前兼容 Django 3.x｜4.x｜5.x，兼容
+Python 3.6 - 3.13，可以参见[《Django 兼容性简表》](https://blog.navifox.net/refs/nav/django#compatibility)。
 
-> [!IMPORTANT]
+> [!IMPORTANT]  
 > 如果您使用 Python 3.11 以前（不含）的版本，需要修改
 > `commons.views.MeowModelViewSet` 内的处理逻辑。
 
@@ -52,23 +53,38 @@ Django 项目模板仓库。
 
 ## 用法
 
-> [!TIP]
+### 1、克隆仓库
+
+可以在 GitHub 中[从模板创建仓库](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)，然后通过
+`git clone 你的仓库地址` 克隆到本地。
+
+如果不希望创建一个新的 GitHub 仓库，可以使用
+`git clone --depth 1 git@github.com:aixcyi/django-template-repo.git`
+得到只有一条历史记录的本地仓库。
+
+### 2、定制代码
+
+首先要将 `django_template_repo` 重命名为你的 **项目名**（需要符合 Python 包命名规则），包括字符串、符号、文件夹名称等等。
+
+> [!IMPORTANT]  
+> 这一步需要优先于创建虚拟环境，如果不执行，下一步创建的虚拟解释器将会出现路径问题。
+
+> [!TIP]  
 > [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/5.2/faq/install/#what-python-version-can-i-use-with-django)
 
-1. [从模板创建仓库（GitHub）](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)；
-2. 克隆刚刚创建的仓库；
-3. 重命名文件夹 ./django_template_repo 及所有引用和字符串为你的 **项目名**；
-4. 根据需要创建并切换虚拟环境；
-5. `pip install -r requirements.txt` 安装依赖；
-6. 在 ./django_template_repo 中创建自定义配置文件 settings_dev.py；
-7. 查找所有以 `TODO` 开头的注释，并按照提示进行修改；
-8. `python manage.py runserver` 运行项目。
+1. **根据需要** 创建并切换到虚拟环境；
+2. **根据需要** 调整依赖版本，然后 `pip install -r requirements.txt` 安装依赖；
+3. 查找所有以 `TODO` 开头的注释，并按照提示 **根据需要** 进行修改；
+4. **根据需要** 创建自定义配置文件 ./django_template_repo/settings_dev.py。
 
-### 配置设置
+### 3、配置 settings
 
-> - [Django Settings 快速配置](https://docs.djangoproject.com/zh-hans/5.2/topics/settings/)
-> - [Django Settings 完整配置列表](https://docs.djangoproject.com/zh-hans/5.2/ref/settings/)
-> - [Django REST Framework Settings](https://www.django-rest-framework.org/api-guide/settings/)
+可以参见下方的[配置模板](#配置模板)选取代码快速配置，也可以直接使用下方的[调试环境配置快速参考](#调试环境配置快速参考)。
+
+> [!NOTE]  
+> Django 文档：[Settings 快速配置](https://docs.djangoproject.com/zh-hans/5.2/topics/settings/)  
+> Django 文档：[Settings 完整配置列表](https://docs.djangoproject.com/zh-hans/5.2/ref/settings/)  
+> Django REST Framework 文档 [Settings 部分](https://www.django-rest-framework.org/api-guide/settings/)
 
 ./django_template_repo/settings_*.py 不会被纳入版本管理，
 你可以通过创建不同命名的配置来实现生产环境和开发环境的隔离，
@@ -87,18 +103,21 @@ for _ in range(10):
     print(key)
 ```
 
-### 创建 App
+### 4、创建 app（可选）
 
-可以通过 PyCharm 插件 [Tiny Snake](https://plugins.jetbrains.com/plugin/24140-tiny-snake/)
-快速创建带有 `serializers.py` 和 `urls.py` 的 App 。
-
-亦或者通过 django-admin 命令在 ./apps 内创建，参数与
-[`startapp`](https://docs.djangoproject.com/zh-hans/5.2/ref/django-admin/#startapp)
-相近，并且可以分别通过指定 `-s` 和 `-u` 标志来创建 `serializers.py` 和 `urls.py` 。
+执行以下指令可以创建一个带有 `serializers.py` 和 `urls.py` 的 Django App。
 
 ```shell
-python manage.py newapp APPNAME -su
+python manage.py newapp <APPNAME> -su
 ```
+
+> [!NOTE]  
+> 也可以通过 PyCharm 插件 [Tiny Snake](https://plugins.jetbrains.com/plugin/24140-tiny-snake/)
+> 一键创建带有 `serializers.py` 和 `urls.py` 的 app 。
+
+### 5、运行项目
+
+执行 `python manage.py runserver` 运行项目。
 
 ## 配置模板
 
