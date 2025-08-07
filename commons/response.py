@@ -1,7 +1,7 @@
 __all__ = [
     'Errcode',
-    'wrap200',
     'resp200',
+    'wrap200',
 ]
 
 from typing import Any
@@ -48,49 +48,7 @@ class Errcode(IntegerChoices):
     WRONG_ACCOUNT_TYPE = -70005, '账号类型错误（不是一个用户）'
 
 
-def wrap200(response: Response, code: Errcode) -> Response:
-    """
-    如果响应内容不符合标准格式，则封装为标准格式。
-
-    :param response: 原始响应。
-    :param code: 从 ``request`` 中推断的错误代码。
-    :return: 符合标准格式的响应。
-    """
-    if not isinstance(response.data, dict) or len({'code', 'message', 'data'} - set(response.data.keys())) > 0:
-        response.data = _resp(response.data, code=code)
-
-    return response
-
-
-def resp200(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **kwargs: Any) -> Response:
-    """
-    构造标准格式的响应。
-
-    HTTP 响应状态码固定为 `200 OK <https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/200>`_ 。
-
-    标准响应格式为一个JSON对象，必定包含以下字段：
-
-    - ``code`` 表示错误代码，必定为 integer（int32）。
-    - ``message`` 表示错误提示，必定为 string 且不为空字符串，不应存在换行符，不建议以句号结尾。
-    - ``data`` 表示业务数据，必定存在，但可以为 ``null`` 或其它任意类型。
-
-    可能包含以下字段：
-
-    - ``prev`` 表示上一页的单个请求 URL，可以为 string 或 ``null``，不为空字符串。
-    - ``next`` 表示下一页的单个请求 URL，可以为 string 或 ``null``，不为空字符串。
-    - ``pages`` 表示总页数，必定为 integer（int64）。
-    - ``error`` 表示需要提供给外部的内部错误，一般为序列化器校验器产生的嵌套数组或嵌套对象，但也可以是其它任意类型。
-
-    :param data: 要返回的业务数据部分，默认为空。
-    :param code: 错误代码，默认为失败。
-    :param msg: 错误提示。不提供则默认为 ``code`` 的标签。
-    :return: DRF 响应对象 :class:`Response` 。
-    """
-    body = _resp(data, code, msg, **kwargs)
-    return Response(body)
-
-
-def _resp(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **kwargs: Any) -> dict:
+def _standardize(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **kwargs: Any) -> dict:
     """
     构造标准的响应数据格式。
 
@@ -117,3 +75,45 @@ def _resp(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **kwa
     if 'pages' in body:
         assert type(body['pages']) is int, 'API响应的 "pages" 字段必须是 int 类型。'
     return body
+
+
+def resp200(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **kwargs: Any) -> Response:
+    """
+    构造标准格式的响应。
+
+    HTTP 响应状态码固定为 `200 OK <https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/200>`_ 。
+
+    标准响应格式为一个JSON对象，必定包含以下字段：
+
+    - ``code`` 表示错误代码，必定为 integer（int32）。
+    - ``message`` 表示错误提示，必定为 string 且不为空字符串，不应存在换行符，不建议以句号结尾。
+    - ``data`` 表示业务数据，必定存在，但可以为 ``null`` 或其它任意类型。
+
+    可能包含以下字段：
+
+    - ``prev`` 表示上一页的单个请求 URL，可以为 string 或 ``null``，不为空字符串。
+    - ``next`` 表示下一页的单个请求 URL，可以为 string 或 ``null``，不为空字符串。
+    - ``pages`` 表示总页数，必定为 integer（int64）。
+    - ``error`` 表示需要提供给外部的内部错误，一般为序列化器校验器产生的嵌套数组或嵌套对象，但也可以是其它任意类型。
+
+    :param data: 要返回的业务数据部分，默认为空。
+    :param code: 错误代码，默认为失败。
+    :param msg: 错误提示。不提供则默认为 ``code`` 的标签。
+    :return: DRF 响应对象 :class:`Response` 。
+    """
+    body = _standardize(data, code, msg, **kwargs)
+    return Response(body)
+
+
+def wrap200(response: Response, code: Errcode) -> Response:
+    """
+    如果响应内容不符合标准格式，则封装为标准格式。
+
+    :param response: 原始响应。
+    :param code: 从 ``request`` 中推断的错误代码。
+    :return: 符合标准格式的响应。
+    """
+    if not isinstance(response.data, dict) or len({'code', 'message', 'data'} - set(response.data.keys())) > 0:
+        response.data = _standardize(response.data, code=code)
+
+    return response
