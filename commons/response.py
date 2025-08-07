@@ -12,14 +12,17 @@ from rest_framework.response import Response
 
 class Errcode(IntegerChoices):
     """
-    项目内部定义的错误代码，用于前端识别 API 响应内容。
+    错误码。
+
+    - 项目定义的错误码，出现在 HTTP 响应数据内，用于前端及接口调用方识别 API 响应状态。
+    - 数值已超出 16 位有符号整数范围，如需存储，至少需要 32 位有符号整数。
     """
 
     # 通用错误码
-    CONTINUE = 2, 'Continue'
-    SUCCESS = 1, 'Success'
-    DONE = 0, 'Done'
-    FAIL = -1, 'Fail'
+    CONTINUE = 2, '继续'
+    SUCCESS = 1, '成功'
+    DONE = 0, '完成'
+    FAIL = -1, '失败'
 
     # 客户端侧错误
     MISSING_PARAMS = -40001, '缺少参数，或参数为空值'
@@ -27,10 +30,22 @@ class Errcode(IntegerChoices):
     INVALID_CERTIFICATE = -40003, '鉴权凭证不合法'
     RESOURCE_NOT_FOUND = -40004, '资源未找到'
     CACHE_MAY_EXPIRED = -40005, '请求非法，或缓存已失效'
+    INVALID_REFRESH_TOKEN = -40006, '刷新令牌已失效'
+    INVALID_ACCESS_TOKEN = -40007, '访问令牌已失效'
+    AUTHENTICATION_UNSUPPORTED = -40008, '认证方式不受支持'
+    AUTHORIZATION_TERMINATED = -40009, '授权流程被终止'
 
     # 服务端侧错误
     WIP = -50001, '接口正在开发'
     FAIL_LOGOUT = -50002, '登出失败'
+    APP_NOT_FOUND = -50003, '应用不存在'
+
+    # 授权鉴权服务侧错误
+    FAIL_AUTHORIZATION = -70001, '授权失败'
+    FAIL_OBTAIN_OPENID = -70002, 'OpenID 获取失败'
+    FAIL_EXCHANGE_TOKEN = -70003, '访问令牌交换失败'
+    FAIL_OBTAIN_PROFILES = -70004, '用户资料获取失败'
+    WRONG_ACCOUNT_TYPE = -70005, '账号类型错误（不是一个用户）'
 
 
 def wrap200(response: Response, code: Errcode) -> Response:
@@ -51,6 +66,8 @@ def resp200(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **k
     """
     构造标准格式的响应。
 
+    HTTP 响应状态码固定为 `200 OK <https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/200>`_ 。
+
     标准响应格式为一个JSON对象，必定包含以下字段：
 
     - ``code`` 表示错误代码，必定为 integer（int32）。
@@ -67,7 +84,7 @@ def resp200(data: Any = None, code: Errcode = Errcode.FAIL, msg: str = None, **k
     :param data: 要返回的业务数据部分，默认为空。
     :param code: 错误代码，默认为失败。
     :param msg: 错误提示。不提供则默认为 ``code`` 的标签。
-    :return: DRF 的响应类对象。
+    :return: DRF 响应对象 :class:`Response` 。
     """
     body = _resp(data, code, msg, **kwargs)
     return Response(body)
