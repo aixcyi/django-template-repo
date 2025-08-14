@@ -54,7 +54,7 @@ class SoftDeleteModelMixin:
 
 class MeowViewException(Exception):
 
-    def __init__(self, msg: str = None, code: Errcode = Errcode.FAIL, **kwargs):
+    def __init__(self, msg: str = None, code: Errcode = Errcode.FAILED, **kwargs):
         self.args = code, msg, kwargs
 
     def as_response(self):
@@ -89,7 +89,7 @@ class MeowAPIView(APIView):
             if isinstance(exc.detail, str):
                 return resp200(msg=str(exc.detail))
             else:
-                return resp200(msg=str(exc.default_detail), error=exc.detail)
+                return resp200(msg=str(exc.default_detail), context=exc.detail)
 
         # 项目自定义的异常根类
         if isinstance(exc, MeowViewException):
@@ -125,11 +125,11 @@ class MeowModelViewSet(mixins.CreateModelMixin,
 
         if response.content_type == JSONRenderer.media_type or response.content_type is None:
             if response.status_code // 100 != 2:
-                code = Errcode.FAIL
+                code = Errcode.FAILED
             elif method == HTTPMethod.GET:
                 code = Errcode.DONE
             else:
-                code = Errcode.SUCCESS
+                code = Errcode.SUCCEED
 
             response = wrap200(response, code=code)
 
