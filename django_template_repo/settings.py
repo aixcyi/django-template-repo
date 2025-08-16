@@ -50,6 +50,7 @@ ASGI_APPLICATION = 'django_template_repo.asgi.application'
 # -------------------------------- 安全 --------------------------------
 
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#secret-key
+# TODO: 首次运行前务必将值改为一个随机字符串。可使用 README 给出的方法生成随机密钥，随心挑选一个。
 SECRET_KEY = None
 
 DEBUG = False
@@ -83,7 +84,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # -------------------------------- 存储 --------------------------------
 
 # 用户模型
-AUTH_USER_MODEL = 'core.User'  # TODO: 更改用户模型（仅在创建数据库前定义，后续不可更改）
+# TODO: 更改用户模型（仅在创建数据库前定义，后续无法更改）。
+AUTH_USER_MODEL = 'core.User'
 
 # 数据库
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#databases
@@ -187,6 +189,7 @@ LOGGING = dict(
             '()': 'django.utils.log.RequireDebugTrue',
         },
     },
+    # TODO: 模板给出的架构较为简单，请根据项目架构、软硬件配置、业务增量、分析需求等考虑日志架构。
     handlers={
         'monitor': dict_(
             class_='logging.StreamHandler',
@@ -200,6 +203,7 @@ LOGGING = dict(
             filters=['require_debugging'],  # 仅在调试模式下往控制台打印日志
             formatter='printing',
         ),
+        # TODO: Windows 下 TimedRotatingFileHandler 可能无法正常轮换日志文件。
         'recorder': dict_(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='INFO',
