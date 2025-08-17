@@ -18,8 +18,11 @@ APPS_DIR = BASE_DIR / 'apps'
 
 # -------------------------------- 核心 --------------------------------
 
+# 项目安装的所有 Django App
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#installed-apps
+# 需要按依赖顺序先后配置。
 INSTALLED_APPS = [
-    # 内置 app
+    # Django 内置的
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -27,13 +30,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 三方 app
+    # 三方库的
     'rest_framework',
 
-    # 项目 app
+    # 项目定义的
     'apps.core.configs.CoreConfig',
 ]
 
+# 中间件
+# https://docs.djangoproject.com/zh-hans/5.2/topics/http/middleware/
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -44,18 +49,50 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# 模板引擎配置
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#templates
+TEMPLATES = [
+    dict(
+        BACKEND='django.template.backends.django.DjangoTemplates',
+        DIRS=[
+            BASE_DIR / 'templates',
+        ],
+        APP_DIRS=True,
+        OPTIONS={
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    ),
+]
+
+# 根路由配置
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#root-urlconf
+ROOT_URLCONF = 'django_template_repo.urls'
+
+# 服务器配置
 WSGI_APPLICATION = 'django_template_repo.wsgi.application'
 ASGI_APPLICATION = 'django_template_repo.asgi.application'
 
 # -------------------------------- 安全 --------------------------------
 
+# 密钥
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#secret-key
 # TODO: 首次运行前务必将值改为一个随机字符串。可使用 README 给出的方法生成随机密钥，随心挑选一个。
 SECRET_KEY = None
 
+# 调试模式
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#debug
+# 切勿在生产环境中开启！！！
 DEBUG = False
 
-ALLOWED_HOSTS = [  # DEBUG=False 时必须配置为非空列表
+# 域名／IP 白名单
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#allowed-hosts
+# 注意，DEBUG=False 时必须配置为非空列表。
+ALLOWED_HOSTS = [
     '.localhost',
     '127.0.0.1',
     '[::1]',
@@ -81,9 +118,15 @@ AUTH_PASSWORD_VALIDATORS = [
     ),
 ]
 
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#append-slash
+APPEND_SLASH = False
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#prepend-www
+PREPEND_WWW = False
+
 # -------------------------------- 存储 --------------------------------
 
 # 用户模型
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#auth-user-model
 # TODO: 更改用户模型（仅在创建数据库前定义，后续无法更改）。
 AUTH_USER_MODEL = 'core.User'
 
@@ -106,8 +149,9 @@ CACHES = {
     ),
 }
 
-# 静态文件（应配置为对外公开的文件路径）
+# 静态文件
 # https://docs.djangoproject.com/zh-hans/5.2/howto/static-files/
+# 应配置为对外公开的文件路径。
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
@@ -116,41 +160,18 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = 'uploads/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
-# -------------------------------- 路由 --------------------------------
-
-ROOT_URLCONF = 'django_template_repo.urls'
-
-APPEND_SLASH = False
-
-# -------------------------------- 模板 --------------------------------
-
-TEMPLATES = [
-    dict(
-        BACKEND='django.template.backends.django.DjangoTemplates',
-        DIRS=[
-            BASE_DIR / 'templates',
-        ],
-        APP_DIRS=True,
-        OPTIONS={
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    ),
-]
-
 # -------------------------------- 日志 --------------------------------
 
-# 日志模块的配置：https://docs.djangoproject.com/zh-hans/5.2/topics/logging/#configuring-logging
-# 配置字典架构：https://docs.python.org/zh-cn/3/library/logging.config.html#logging-config-dictschema
+# 日志模块的配置
+# https://docs.djangoproject.com/zh-hans/5.2/topics/logging/#configuring-logging
+# 配置字典架构
+# https://docs.python.org/zh-cn/3/library/logging.config.html#logging-config-dictschema
 LOGGING = dict(
     version=1,
     disable_existing_loggers=False,
+    # 格式化器默认配置
+    # https://docs.python.org/zh-cn/3/library/logging.html#logging.Formatter
     formatters={
-        # 格式化器默认配置：https://docs.python.org/zh-cn/3/library/logging.html#logging.Formatter
         'verbose': dict(
             format=(
                 '[%(asctime)s] '
@@ -169,7 +190,8 @@ LOGGING = dict(
                 '%(message)s'
             ),
         ),
-        # 自定义格式化器：https://docs.python.org/zh-cn/3/library/logging.config.html#user-defined-objects
+        # 自定义格式化器
+        # https://docs.python.org/zh-cn/3/library/logging.config.html#user-defined-objects
         'printing': {
             '()': 'logging.Formatter',
             'fmt': (
@@ -183,8 +205,9 @@ LOGGING = dict(
             },
         }
     },
+    # 过滤器
+    # https://docs.python.org/zh-cn/3/library/logging.html#logging.Filter
     filters={
-        # 过滤器：https://docs.python.org/zh-cn/3/library/logging.html#logging.Filter
         'require_debugging': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
@@ -250,7 +273,7 @@ LOGGING = dict(
 )
 
 # -------------------------------- 国际化 --------------------------------
-# Internationalization
+# Internationalization，缩写为 i18n
 # https://docs.djangoproject.com/zh-hans/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'zh-hans'
