@@ -1,6 +1,5 @@
 __all__ = [
     'SoftDeleteModelMixin',
-    'MeowViewException',
     'MeowAPIView',
     'MeowViewSet',
     'MeowModelViewSet',
@@ -18,6 +17,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from commons.exceptions import MeowViewException
 from commons.response import Errcode, resp200, wrap200
 from utils.views import EasyViewSetMixin
 
@@ -51,15 +51,6 @@ class SoftDeleteModelMixin:
         setattr(instance, self.deletion_field, self.deletion_mark)
 
         instance.save()
-
-
-class MeowViewException(Exception):
-
-    def __init__(self, msg: str = None, code: Errcode = Errcode.FAILED, **kwargs):
-        self.args = code, msg, kwargs
-
-    def as_response(self):
-        return resp200(code=self.args[0], msg=self.args[1], **self.args[2])
 
 
 class MeowAPIView(APIView):
