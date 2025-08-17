@@ -1,34 +1,36 @@
 # Django Template Repo
 
-Django 项目模板仓库，基于 `django-admin` 默认模板开发，倾向于前后端分离开发。
+Django 项目模板，基于 `django-admin` 默认模板定制，倾向于配合 Django REST Framework 进行前后端分离开发。
 
 ## 特性
 
-- 可以隔离不同环境的配置。
-- 更加易读的 `settings.py` 。
-- 生成更易读的表名，比如 `order.models.GoodsSKUInfo` 会默认创建 `order_goods_sku_info` 表，而不是 `order_goodsskuinfo` 。
-- 预设两个日志文件 `./logs/alarms.log` 和 `./logs/records.log`，控制台仅在调试模式才会打印。
-- 将 Django App 集中存放在 ./apps 目录下。
-- 预设继承 `AbstractUser` 来自定义用户的 `User` 模型（放在 `core` 这个app里）。
-- 通过 `__all__` 约束包公开的符号。
+- 架构上：
+  - 为隔离不同环境（开发环境、测试环境、生产环境）的而设计。
+  - 预设两个日志文件 `./logs/alarms.log` 和 `./logs/records.log`，控制台仅在调试模式才会打印。
+  - 内置的 `utils.models.SnakeModel` 可生成更易读的表名，比如 `apps.order.models.GoodsSKUInfo` 会默认创建 `order_goods_sku_info` 表，而不是 `order_goodsskuinfo` 。
+- 代码上：
+  - 拥有更加易查、易读的 `settings.py` 。
+  - 预设（Django 推荐）继承 `AbstractUser` 来自定义 `apps.core.models.User` 模型。
+  - 潜在改动位置通过 `TODO` 开头的注释进行提示，且均位于单独一行，方便清理。
+  - 通过 `__all__` 约束包公开的符号。
 
 ## 兼容性
 
-以 Django 4.2 为基准创建，目前兼容 Django 3.x｜4.x｜5.x，兼容
+以 Django 4.2 为底创建，兼容 Django 5.x｜4.x｜3.x，兼容
 Python 3.6 - 3.13，可以参见[《Django 兼容性简表》](https://blog.navifox.net/refs/nav/django#compatibility)。
-
-> [!IMPORTANT]  
-> 如果您使用 Python 3.11 以前（不含）的版本，需要修改
-> `commons.views.MeowModelViewSet` 内的处理逻辑。
 
 ## 结构
 
-### 目录结构（按依赖先后排序）
+### 目录结构
 
-- `./apps` 存放项目内的所有 Django App。
-- `./commons` 存放对于框架的定制，或仅适用于单个项目的工具。
-- `./django_template_repo` 存放 Django Settings、总路由等配置。
-- `./utils` 存放（可以跨项目的）通用工具。
+| 目录（按依赖先后排序）              | 含义   | 描述                            |
+|--------------------------|------|-------------------------------|
+| `./utils`                | 通用工具 | 跨项目的、通用的工具或代码。                |
+| `./commons`              | 定制工具 | 仅适用于当前项目的工具，或对框架的定制。          |
+| `./django_template_repo` | 项目配置 | Django Settings、总路由等。         |
+| `./apps`                 | 业务   | 项目内的所有 Django App。            |
+| `./apps/core`            | 核心工具 | 被项目内其它所有 Django App 依赖的工具或代码。 |
+| `./logs`                 | 日志   | 使用[配置模板](#配置模板)可在首次运行时自动生成。   |
 
 ### 日志记录器
 
@@ -37,7 +39,7 @@ Python 3.6 - 3.13，可以参见[《Django 兼容性简表》](https://blog.navi
   - `django` 框架使用的根记录器，由框架自带。
     - `django.server` 服务器部分的日志。不向上传递。
     - `django.request` 请求部分的日志。不向上传递。
-    - 更多内置的记录器见[默认的日志定义](https://docs.djangoproject.com/zh-hans/5.2/ref/logging/#default-logging-definition)。
+    - 更多内置的记录器见 [Django 默认的日志定义](https://docs.djangoproject.com/zh-hans/5.2/ref/logging/#default-logging-definition)。
 
 ### 日志处理器
 
@@ -48,38 +50,44 @@ Python 3.6 - 3.13，可以参见[《Django 兼容性简表》](https://blog.navi
 | `recorder` | `./logs/records.log` | `INFO`    | 标准 | 处理所有非调试日志。             |
 | `alarmer`  | `./logs/alarms.log`  | `WARNING` | 详细 | 处理所有警告和异常。             |
 
-- 日志处理器默认无条件触发。`console` 仅在 `DEBUG = True` 时触发。
+- 日志处理器默认无条件触发。`console` 仅在 `settings.DEBUG = True` 时触发。
 - `console` 的打印格式基于标准格式，但去除了时刻中的日期部分。
 
 ## 用法
 
 ### 1、克隆仓库
 
-可以在 GitHub 中[从模板创建仓库](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)，然后通过
-`git clone 你的仓库地址` 克隆到本地。
+可以在 GitHub
+中[从模板创建仓库](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)，然后通过以下命令克隆到本地。
 
-如果不希望创建一个新的 GitHub 仓库，可以使用
-`git clone --depth 1 git@github.com:aixcyi/django-template-repo.git`
-得到只有一条历史记录的本地仓库。
+```shell
+git clone 你的仓库地址 项目新名称
+```
 
-### 2、定制代码
+如果不希望创建一个新的 GitHub 仓库，可以使用以下命令得到只有一条历史记录的本地仓库。
 
-首先要将 `django_template_repo` 重命名为你的 **项目名**（需要符合 Python 包命名规则），包括字符串、符号、文件夹名称等等。
+```shell
+git clone --depth 1 git@github.com:aixcyi/django-template-repo.git 项目新名称
+```
 
-> [!IMPORTANT]  
-> 这一步需要优先于创建虚拟环境，如果不执行，下一步创建的虚拟解释器将会出现路径问题。
+### 2、安装依赖
 
 > [!TIP]  
 > [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/5.2/faq/install/#what-python-version-can-i-use-with-django)
 
-1. **根据需要** 创建并切换到虚拟环境；
-2. **根据需要** 调整依赖版本，然后 `pip install -r requirements.txt` 安装依赖；
-3. 查找所有以 `TODO` 开头的注释，并按照提示 **根据需要** 进行修改；
-4. **根据需要** 创建自定义配置文件 ./django_template_repo/settings_dev.py。
+1. 根据需要创建并切换到虚拟环境；
+2. 根据需要调整 `./requirements.txt` 中的依赖包版本；
+3. 执行 `pip install -r ./requirements.txt` 安装依赖。
 
-### 3、配置 settings
+### 3、定制代码
 
-可以参见下方的[配置模板](#配置模板)选取代码快速配置，也可以直接使用下方的[调试环境配置快速参考](#调试环境配置快速参考)。
+1. 将 `./django_template_repo` 重命名为你的 **项目名**（需要符合 Python 包命名规则）；
+2. 查找所有以 `TODO` 开头的注释，并按照提示根据实际需要进行修改；
+3. 根据需要创建自定义配置文件 ./django_template_repo/settings_dev.py（也可以是其它名字，但建议放在同一个文件夹）。
+
+### 4、配置 Settings
+
+可以参见下方的[配置模板](#配置模板)选取代码快速配置。
 
 > [!NOTE]  
 > Django 文档：[Settings 快速配置](https://docs.djangoproject.com/zh-hans/5.2/topics/settings/)  
@@ -103,36 +111,46 @@ for _ in range(10):
     print(key)
 ```
 
-### 4、创建 app（可选）
+### 5、创建 Django App（可选）
 
-执行以下指令可以创建一个带有 `serializers.py` 和 `urls.py` 的 Django App。
+执行以下模板自带的指令可以创建一个带有 `serializers.py` 和 `urls.py` 的 Django App。
 
 ```shell
 python manage.py newapp <APPNAME> -su
 ```
 
-> [!NOTE]  
-> 也可以通过 PyCharm 插件 [Tiny Snake](https://plugins.jetbrains.com/plugin/24140-tiny-snake/)
-> 一键创建带有 `serializers.py` 和 `urls.py` 的 app 。
+### 6、运行项目
 
-### 5、运行项目
+执行以下命令运行项目：
 
-执行 `python manage.py runserver` 运行项目。
+```shell
+python manage.py runserver
+```
 
 ## 配置模板
 
-### settings_dev.py
-
-适用于本地调试环境。
+### 开发环境
 
 ```python
 from django_template_repo.settings import *
 
 DEBUG = True
-SECRET_KEY = '<随机生成的任意ASCII字符>'
+SECRET_KEY = '<Z~Bhb@?39U0EcX31IKEQ^93GlQt-o-x8QXH#sE7=Ci?gJ4J49nOKir?WMR3`EhyjOt%uivqAZ!Ka;uL'
 ALLOWED_HOSTS = [
     '*',
 ]
+DATABASES['default'] = dict(
+    ENGINE='django.db.backends.postgresql',
+    NAME='django_template_repo',
+    USER='postgres',
+    PASSWORD='postgres',
+    HOST='127.0.0.1',
+    PORT='5432',
+)
+CACHES['default'] = dict(
+    BACKEND='django.core.cache.backends.redis.RedisCache',
+    LOCATION='redis://127.0.0.1:6379/11',
+)
 
 # 确保目录一定存在
 LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
@@ -140,14 +158,30 @@ MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
 STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
 ```
 
-### settings_prod.py
-
-适用于生产环境。
+### 生产环境
 
 ```python
 from django_template_repo.settings import *
 
-SECRET_KEY = '<随机生成的任意ASCII字符>'
+DEBUG = False
+SECRET_KEY = 'Yl#}JDJ>>>tWhU{z1#yPmgu_Js^h6*SVqd*DYSE{FpNi8vtY;5W!gJq;?793?5jfF+IdH0z>&WPRG=-?'
+ALLOWED_HOSTS = [  # DEBUG=False 时必须配置为非空列表
+    '.localhost',
+    '127.0.0.1',
+    '[::1]',
+]
+DATABASES['default'] = dict(
+    ENGINE='django.db.backends.postgresql',
+    NAME='django_template_repo',
+    USER='postgres',
+    PASSWORD='postgres',
+    HOST='127.0.0.1',
+    PORT='5432',
+)
+CACHES['default'] = dict(
+    BACKEND='django.core.cache.backends.redis.RedisCache',
+    LOCATION='redis://127.0.0.1:6379/11',
+)
 
 # 确保目录一定存在
 LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
@@ -230,31 +264,4 @@ CACHES = {
         LOCATION='redis://127.0.0.1:6379/0',
     ),
 }
-```
-
-### 调试环境配置快速参考
-
-```python
-from django_template_repo.settings import *
-
-DEBUG = True
-SECRET_KEY = '<Z~Bhb@?39U0EcX31IKEQ^93GlQt-o-x8QXH#sE7=Ci?gJ4J49nOKir?WMR3`EhyjOt%uivqAZ!Ka;uL'
-ALLOWED_HOSTS = [
-    '*',
-]
-DATABASES['default'] = dict(
-    ENGINE='django.db.backends.postgresql',
-    NAME='django_template_repo',
-    USER='postgres',
-    PASSWORD='postgres',
-    HOST='127.0.0.1',
-    PORT='5432',
-)
-CACHES['default'] = dict(
-    BACKEND='django.core.cache.backends.redis.RedisCache',
-    LOCATION='redis://127.0.0.1:6379/11',
-)
-LOGS_DIR.mkdir(exist_ok=True)
-MEDIA_ROOT.mkdir(exist_ok=True)
-STATIC_ROOT.mkdir(exist_ok=True)
 ```
