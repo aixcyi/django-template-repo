@@ -98,22 +98,15 @@ git clone --depth 1 git@github.com:aixcyi/django-template-repo.git 项目新名�
 你可以通过创建不同命名的配置来实现生产环境和开发环境的隔离，
 比如用 `settings_dev.py` 配置开发环境，用 `settings_prod.py` 来配置生产环境。
 
-仅 `SECRET_KEY` 是必须进行配置的。
-使用以下代码可以快速生成随机 `SECRET_KEY` 以备选择：
+执行以下命令可以快速生成任意个 `SECRET_KEY` 以供挑选：
 
-```python
-from base64 import b85encode
-from random import getrandbits
-
-for _ in range(10):
-    soup = getrandbits(64 * 8).to_bytes(64, 'big')
-    key = b85encode(soup).decode('ASCII')
-    print(key)
+```shell
+python manage.py genkey -n 20
 ```
 
 ### 5、创建 Django App（可选）
 
-执行以下模板自带的指令可以创建一个带有 `serializers.py` 和 `urls.py` 的 Django App。
+执行以下命令可以创建一个带有 `serializers.py` 和 `urls.py` 的 Django App。
 
 ```shell
 python manage.py newapp <APPNAME> -su

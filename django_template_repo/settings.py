@@ -81,7 +81,7 @@ ASGI_APPLICATION = 'django_template_repo.asgi.application'
 
 # 密钥
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#secret-key
-# TODO: 首次运行前务必将值改为一个随机字符串。可使用 README 给出的方法生成随机密钥，随心挑选一个。
+# TODO: 首次运行前务必将值改为一个随机字符串。可使用命令 `python manage.py genkey` 随机生成，挑选中意的一条粘贴到这里。
 SECRET_KEY = None
 
 # 调试模式
