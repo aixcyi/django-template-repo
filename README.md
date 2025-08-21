@@ -112,7 +112,7 @@ python manage.py genkey -n 20
 > 这是独属于当前项目的 Django App 模板；仓库默认配备了 Django REST Framework 的 `serializers.py`
 > 以及 `urls.py`，同时为了适配统一存储，将 `apps.py` 更名为 `configs.py`。
 
-执行以下命令即可在 `settings.APPS_DIR` 下按照模板 `./apps/template` 创建一个 Django App：
+执行以下命令即可在 `settings.APPS_ROOT` 下按照模板 `./apps/template` 创建一个 Django App：
 
 ```shell
 python manage.py addapp <APPNAME>
@@ -154,7 +154,7 @@ CACHES['default'] = dict(
 )
 
 # 确保目录一定存在
-LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
+LOGS_ROOT.mkdir(exist_ok=True)  # 日志目录
 MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
 STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
 ```
@@ -185,7 +185,7 @@ CACHES['default'] = dict(
 )
 
 # 确保目录一定存在
-LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
+LOGS_ROOT.mkdir(exist_ok=True)  # 日志目录
 ```
 
 ### PostgreSQL 配置模板
@@ -244,12 +244,12 @@ DATABASES = {
 [注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#sqlite-notes)
 
 ```python
-from django_template_repo.settings import BASE_DIR
+from django_template_repo.settings import PROJECT_ROOT
 
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.sqlite3',
-        NAME=BASE_DIR / '数据库名称.sqlite3',
+        NAME=PROJECT_ROOT / '数据库名称.sqlite3',
     ),
 }
 ```

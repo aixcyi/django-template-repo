@@ -12,9 +12,9 @@ from pathlib import Path
 
 from utils.converters import dict_
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-LOGS_DIR = BASE_DIR / 'logs'
-APPS_DIR = BASE_DIR / 'apps'
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+LOGS_ROOT = PROJECT_ROOT / 'logs'
+APPS_ROOT = PROJECT_ROOT / 'apps'
 
 # -------------------------------- 核心 --------------------------------
 
@@ -55,7 +55,7 @@ TEMPLATES = [
     dict(
         BACKEND='django.template.backends.django.DjangoTemplates',
         DIRS=[
-            BASE_DIR / 'templates',
+            PROJECT_ROOT / 'templates',
         ],
         APP_DIRS=True,
         OPTIONS={
@@ -153,12 +153,12 @@ CACHES = {
 # https://docs.djangoproject.com/zh-hans/5.2/howto/static-files/
 # 应配置为对外公开的文件路径。
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = PROJECT_ROOT / 'static'
 
 # 用户上传内容
 # https://docs.djangoproject.com/zh-hans/5.2/topics/security/#user-uploaded-content-security
 MEDIA_URL = 'uploads/'
-MEDIA_ROOT = BASE_DIR / 'uploads'
+MEDIA_ROOT = PROJECT_ROOT / 'uploads'
 
 # -------------------------------- 日志 --------------------------------
 
@@ -231,7 +231,7 @@ LOGGING = dict(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='INFO',
             formatter='standard',
-            filename=LOGS_DIR / 'records.log',
+            filename=LOGS_ROOT / 'records.log',
             encoding='UTF-8',
             backupCount=365,
             when='d',
@@ -240,7 +240,7 @@ LOGGING = dict(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='WARNING',
             formatter='verbose',
-            filename=LOGS_DIR / 'alarms.log',
+            filename=LOGS_ROOT / 'alarms.log',
             encoding='UTF-8',
             backupCount=365,
             when='d',
