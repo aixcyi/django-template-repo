@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from commons.exceptions import MeowViewException
-from commons.response import Errcode, resp200, wrap200
+from commons.response import Errcode, standardize
 from utils.views import EasyViewSetMixin
 
 
@@ -74,14 +74,14 @@ class MeowAPIView(APIView):
         """
         # Django 捕获的来自数据库的异常
         if isinstance(exc, IntegrityError):
-            return resp200(msg=str(exc))
+            return Errcode.FAILED(str(exc))
 
         # Django REST Framework 异常根类
         if isinstance(exc, APIException):
             if isinstance(exc.detail, str):
-                return resp200(msg=str(exc.detail))
+                return Errcode.FAILED(str(exc.detail))
             else:
-                return resp200(msg=str(exc.default_detail), context=exc.detail)
+                return Errcode.FAILED(str(exc.default_detail), ctx=exc.detail)
 
         # 项目自定义的异常根类
         if isinstance(exc, MeowViewException):
@@ -117,12 +117,10 @@ class MeowModelViewSet(mixins.CreateModelMixin,
 
         if response.content_type == JSONRenderer.media_type or response.content_type is None:
             if response.status_code // 100 != 2:
-                code = Errcode.FAILED
-            elif method == HTTPMethod.GET:
-                code = Errcode.DONE
+                errcode = Errcode.FAILED
             else:
-                code = Errcode.SUCCEED
+                errcode = Errcode.DONE
 
-            response = wrap200(response, code=code)
+            response = standardize(response, errcode=errcode)
 
         return response
