@@ -226,6 +226,36 @@ CACHES = {
 }
 ```
 
+如果需要更高的性能，可以与 [`hiredis`](https://pypi.org/project/hiredis/) 搭配使用：
+
+```python
+CACHES = {
+    'default': dict(
+        BACKEND='django_redis.cache.RedisCache',
+        LOCATION='redis://127.0.0.1:6379/0',
+        OPTIONS=dict(
+            CLIENT_CLASS='django_redis.client.DefaultClient',
+            PARSER_CLASS='redis.connection.HiredisParser',
+        )
+    )
+}
+```
+
+但注意，如果使用 `hiredis` 5.0 及以上的版本，需要这样：
+
+```python
+CACHES = {
+    'default': dict(
+        BACKEND='django_redis.cache.RedisCache',
+        LOCATION='redis://127.0.0.1:6379/0',
+        OPTIONS=dict(
+            CLIENT_CLASS='django_redis.client.DefaultClient',
+            PARSER_CLASS='redis.connection._HiredisParser',
+        )
+    )
+}
+```
+
 ### 环境快速配置模板
 
 #### `settings.py`
