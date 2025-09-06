@@ -20,9 +20,9 @@ APPS_ROOT = PROJECT_ROOT / 'apps'
 
 # 项目安装的所有 Django App
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#installed-apps
-# 需要按依赖顺序先后配置。
 INSTALLED_APPS = [
     # Django 内置的
+    # https://docs.djangoproject.com/zh-hans/5.2/ref/contrib/
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -292,9 +292,37 @@ DATETIME_FORMAT = f'{DATE_FORMAT} {TIME_FORMAT}'
 
 # https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = dict(
+    # 异常处理
+    # https://www.django-rest-framework.org/api-guide/settings/#exception_handler
+    EXCEPTION_HANDLER='rest_framework.views.exception_handler',
+
+    # API 策略
+    DEFAULT_RENDERER_CLASSES=[
+        'rest_framework.renderers.JSONRenderer',
+        # TODO: 如果不希望（通过浏览器）直接访问接口时自动展示接口信息，可以去掉下面这行：
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    DEFAULT_AUTHENTICATION_CLASSES=[
+        # TODO: TokenAuthentication 仅支持 “Token xxx” 格式的 Authorization 头，如需 “Bearer xxx” 格式请考虑继承重写。
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    DEFAULT_PERMISSION_CLASSES=[
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        # TODO: 如果无需鉴权的接口占了大部分，可以将上面一行替换成下面这行：
+        # 'rest_framework.permissions.AllowAny',
+    ],
+    DEFAULT_THROTTLE_CLASSES=[
+    ],
+
+    # 时间处理
     DATE_FORMAT='%Y-%m-%d',
     TIME_FORMAT='%H:%M:%S',
     DATETIME_FORMAT='%Y-%m-%d %H:%M:%S',
+    DATE_INPUT_FORMATS=['%Y-%m-%d', 'iso-8601'],
+    TIME_INPUT_FORMATS=['%H:%M:%S', 'iso-8601'],
+    DATETIME_INPUT_FORMATS=['%Y-%m-%d %H:%M:%S', 'iso-8601'],
 )
 
 # -------------------------------- 自定义配置 --------------------------------
