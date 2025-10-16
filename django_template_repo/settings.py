@@ -98,6 +98,18 @@ ALLOWED_HOSTS = [
     '[::1]',
 ]
 
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#append-slash
+APPEND_SLASH = False
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#prepend-www
+PREPEND_WWW = False
+
+# -------------------------------- 认证 --------------------------------
+
+# 用户模型
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#auth-user-model
+# TODO: 更改用户模型（仅在创建数据库前定义，后续无法更改）。
+AUTH_USER_MODEL = 'core.User'
+
 # 密码验证
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -118,17 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
     ),
 ]
 
-# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#append-slash
-APPEND_SLASH = False
-# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#prepend-www
-PREPEND_WWW = False
-
 # -------------------------------- 存储 --------------------------------
-
-# 用户模型
-# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#auth-user-model
-# TODO: 更改用户模型（仅在创建数据库前定义，后续无法更改）。
-AUTH_USER_MODEL = 'core.User'
 
 # 数据库
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#databases
