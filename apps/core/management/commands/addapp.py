@@ -21,11 +21,11 @@ class Command(TemplateCommand):
         if not hasattr(settings, 'APPS_ROOT'):
             raise CommandError('请在 settings 中配置 APPS_ROOT 指明 Django App 的存放目录。')
 
-        template_dir = (settings.APPS_ROOT / 'template').absolute()
-        self.target = (settings.APPS_ROOT / options.pop('name')).absolute()
+        template_dir = (settings.APPS_DIR / 'template').absolute()
+        self.target = (settings.APPS_DIR / options.pop('name')).absolute()
 
         try:
-            module = self.target.relative_to(settings.PROJECT_ROOT)
+            module = self.target.relative_to(settings.PROJECT_DIR)
         except ValueError:
             module = self.target.name
 

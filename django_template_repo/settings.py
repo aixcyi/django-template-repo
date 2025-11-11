@@ -12,9 +12,9 @@ from pathlib import Path
 
 from utils.converters import dict_
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-LOGS_ROOT = PROJECT_ROOT / 'logs'
-APPS_ROOT = PROJECT_ROOT / 'apps'
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+LOGS_DIR = PROJECT_DIR / 'logs'
+APPS_DIR = PROJECT_DIR / 'apps'
 
 # -------------------------------- 核心 --------------------------------
 
@@ -55,7 +55,7 @@ TEMPLATES = [
     dict(
         BACKEND='django.template.backends.django.DjangoTemplates',
         DIRS=[
-            PROJECT_ROOT / 'templates',
+            PROJECT_DIR / 'templates',
         ],
         APP_DIRS=True,
         OPTIONS=dict(
@@ -155,12 +155,12 @@ CACHES = {
 # https://docs.djangoproject.com/zh-hans/5.2/howto/static-files/
 # 应配置为对外公开的文件路径。
 STATIC_URL = 'static/'
-STATIC_ROOT = PROJECT_ROOT / 'static'
+STATIC_ROOT = PROJECT_DIR / 'static'
 
 # 用户上传内容
 # https://docs.djangoproject.com/zh-hans/5.2/topics/security/#user-uploaded-content-security
 MEDIA_URL = 'uploads/'
-MEDIA_ROOT = PROJECT_ROOT / 'uploads'
+MEDIA_ROOT = PROJECT_DIR / 'uploads'
 
 # -------------------------------- 日志 --------------------------------
 
@@ -233,7 +233,7 @@ LOGGING = dict(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='INFO',
             formatter='standard',
-            filename=LOGS_ROOT / 'records.log',
+            filename=LOGS_DIR / 'records.log',
             encoding='UTF-8',
             backupCount=365,
             when='d',
@@ -242,7 +242,7 @@ LOGGING = dict(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='WARNING',
             formatter='verbose',
-            filename=LOGS_ROOT / 'alarms.log',
+            filename=LOGS_DIR / 'alarms.log',
             encoding='UTF-8',
             backupCount=365,
             when='d',
@@ -328,5 +328,8 @@ REST_FRAMEWORK = dict(
 )
 
 # -------------------------------- 自定义配置 --------------------------------
+
+# 项目部署地址（不应以 / 结尾）
+EGO_SERVER = 'https://localhost:23333'
 
 # ...

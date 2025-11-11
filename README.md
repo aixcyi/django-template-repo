@@ -187,12 +187,12 @@ DATABASES = {
 [注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#sqlite-notes)
 
 ```python
-from django_template_repo.settings import PROJECT_ROOT
+from django_template_repo.settings import PROJECT_DIR
 
 DATABASES = {
     'default': dict(
         ENGINE='django.db.backends.sqlite3',
-        NAME=PROJECT_ROOT / '数据库名称.sqlite3',
+        NAME=PROJECT_DIR / '数据库名称.sqlite3',
     ),
 }
 ```
@@ -302,7 +302,7 @@ DATABASES['default']['NAME'] = 'django_template_repo'
 DATABASES['default']['USER'] = 'postgres'
 DATABASES['default']['PASSWORD'] = 'postgres'
 CACHES['default']['LOCATION'] = 'redis://127.0.0.1:6379/0'
-LOGS_ROOT.mkdir(exist_ok=True)  # 日志目录
+LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
 MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
 STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
 ```
