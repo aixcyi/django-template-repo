@@ -40,6 +40,7 @@ Python 3.6 - 3.13，可以参见[《Django 兼容性简表》](https://blog.navi
   - `django` 框架使用的根记录器，由框架自带。
     - `django.server` 服务器部分的日志。不向上传递。
     - `django.request` 请求部分的日志。不向上传递。
+    - `django.db.backends` 数据库后端的日志。不向上传递。
     - 更多内置的记录器见 [Django 默认的日志定义](https://docs.djangoproject.com/zh-hans/5.2/ref/logging/#default-logging-definition)。
 
 ### 日志处理器

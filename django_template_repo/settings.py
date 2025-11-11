@@ -247,12 +247,27 @@ LOGGING = dict(
             backupCount=365,
             when='d',
         ),
+        'database': dict_(
+            class_='logging.handlers.TimedRotatingFileHandler',
+            level='WARNING',
+            formatter='standard',
+            filename=LOGS_DIR / 'db.log',
+            encoding='UTF-8',
+            backupCount=365,
+            when='d',
+        ),
     },
     loggers={
         'django': dict(
             level='INFO',
             filters=[],
             handlers=['console'],
+        ),
+        'django.db.backends': dict(
+            level='DEBUG',
+            filters=[],
+            handlers=['console', 'database'],
+            propagate=False,
         ),
         'django.server': dict(
             level='INFO',
