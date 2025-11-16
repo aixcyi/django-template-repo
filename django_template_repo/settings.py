@@ -345,6 +345,6 @@ REST_FRAMEWORK = dict(
 # -------------------------------- 自定义配置 --------------------------------
 
 # 项目部署地址（不应以 / 结尾）
-EGO_SERVER = 'https://localhost:23333'
+EGO_ENDPOINT = 'https://localhost:23333'
 
 # ...
