@@ -5,8 +5,7 @@ __all__ = [
 
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-
-from utils.models import SnakeModel
+from zeraora.django import SnakeModel
 
 
 class ActiveUserManger(UserManager):

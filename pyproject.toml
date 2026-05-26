@@ -1,0 +1,15 @@
+[project]
+name = "django-template-repo"
+version = "5.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "Django~=5.2.14",
+    "djangorestframework~=3.17.1",
+    "psycopg[binary,pool]~=3.3.4",
+    "Zeraora~=0.4.0rc0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "djangorestframework-stubs~=3.17",
+]

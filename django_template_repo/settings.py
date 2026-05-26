@@ -9,8 +9,7 @@ django_template_repo 的项目设置。
 """
 
 from pathlib import Path
-
-from utils.converters import dict_
+from zeraora.conf import logc
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 LOGS_DIR = PROJECT_DIR / 'logs'
@@ -216,20 +215,20 @@ LOGGING = dict(
     },
     # TODO: 模板给出的架构较为简单，请根据项目架构、软硬件配置、业务增量、分析需求等考虑日志架构。
     handlers={
-        'monitor': dict_(
+        'monitor': logc(
             class_='logging.StreamHandler',
             level='INFO',
             filters=[],
             formatter='standard',
         ),
-        'console': dict_(
+        'console': logc(
             class_='logging.StreamHandler',
             level='DEBUG',
             filters=['require_debugging'],  # 仅在调试模式下往控制台打印日志
             formatter='printing',
         ),
         # TODO: Windows 下 TimedRotatingFileHandler 可能无法正常轮换日志文件。
-        'recorder': dict_(
+        'recorder': logc(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='INFO',
             formatter='standard',
@@ -238,7 +237,7 @@ LOGGING = dict(
             backupCount=365,
             when='d',
         ),
-        'alarmer': dict_(
+        'alarmer': logc(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='WARNING',
             formatter='verbose',
@@ -247,7 +246,7 @@ LOGGING = dict(
             backupCount=365,
             when='d',
         ),
-        'database': dict_(
+        'database': logc(
             class_='logging.handlers.TimedRotatingFileHandler',
             level='WARNING',
             formatter='standard',
