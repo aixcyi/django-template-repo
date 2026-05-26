@@ -16,10 +16,10 @@ class Command(TemplateCommand):
         parser.add_argument('name', help='App 名称，必须是一个包名。')
 
     def handle(self, **options):
-        if not hasattr(settings, 'PROJECT_ROOT'):
-            raise CommandError('请在 settings 中配置 PROJECT_ROOT 指明当前项目的根目录。')
-        if not hasattr(settings, 'APPS_ROOT'):
-            raise CommandError('请在 settings 中配置 APPS_ROOT 指明 Django App 的存放目录。')
+        if not hasattr(settings, 'PROJECT_DIR'):
+            raise CommandError('请在 settings 中配置 PROJECT_DIR 指明当前项目的根目录。')
+        if not hasattr(settings, 'APPS_DIR'):
+            raise CommandError('请在 settings 中配置 APPS_DIR 指明 Django App 的存放目录。')
 
         template_dir = (settings.APPS_DIR / 'template').absolute()
         self.target = (settings.APPS_DIR / options.pop('name')).absolute()
