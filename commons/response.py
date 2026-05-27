@@ -48,7 +48,7 @@ class Errcode(IntegerChoices):
         return self >= Errcode.DONE
 
     # 该方法可能会被高频使用，因此简写参数名。
-    def __call__(self, msg: str = None, ctx: Any = None, data=None, **fields) -> Response:
+    def __call__(self, msg: str | None = None, ctx: Any = None, data=None, **fields) -> Response:
         """
         构造基于 :class:`Errcode` 的标准格式的响应。
 
@@ -69,7 +69,7 @@ class Errcode(IntegerChoices):
 def _standardize(
     data: Any,
     errcode: Errcode,
-    message: str = None,
+    message: str | None = None,
     context: Any = None,
     **fields: Any,
 ) -> dict:
@@ -111,7 +111,7 @@ def resp200(
     data: Any = None,
     *,
     code: Errcode = Errcode.DONE,
-    msg: str = None,
+    msg: str | None = None,
     ctx: Any = None,
     **fields: Any,
 ) -> Response:

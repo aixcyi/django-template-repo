@@ -7,7 +7,7 @@ from commons.response import Errcode, resp200
 
 class MeowViewException(Exception):
     # 该方法可能会被高频使用，因此简写参数名。
-    def __init__(self, msg: str = None, *, ctx=None, code: Errcode = Errcode.FAILED, **fields):
+    def __init__(self, msg: str | None = None, *, ctx=None, code: Errcode = Errcode.FAILED, **fields):
         """
         项目根异常。
 

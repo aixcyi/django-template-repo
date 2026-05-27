@@ -19,7 +19,7 @@ class EasyViewSetMixin(ViewSetMixin):
     """
 
     @classonlymethod
-    def to_view(cls, initkwargs: dict[str, Any] = None, **actions: str):
+    def to_view(cls, initkwargs: dict[str, Any] | None = None, **actions: str):
         """
         将视图类存储在一个视图函数上，方便URL反向查找。
 
