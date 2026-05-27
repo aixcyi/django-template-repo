@@ -6,7 +6,6 @@ from commons.response import Errcode, resp200
 
 
 class MeowViewException(Exception):
-
     # 该方法可能会被高频使用，因此简写参数名。
     def __init__(self, msg: str = None, *, ctx=None, code: Errcode = Errcode.FAILED, **fields):
         """
@@ -19,9 +18,9 @@ class MeowViewException(Exception):
         :param code: 错误代码，默认为失败。
         :param fields: 其它需要加入到响应报文的字段，不能含有 ``errcode``，``message`` 与 ``context`` 三个字段。
         """
-        assert 'errcode' not in fields, f'{self.__class__.__name__}() 不能接受名为 errcode 的额外参数，请改用 code= 传递，或重命名。'
-        assert 'message' not in fields, f'{self.__class__.__name__}() 不能接受名为 message 的额外参数，请改用 msg= 传递，或重命名。'
-        assert 'context' not in fields, f'{self.__class__.__name__}() 不能接受名为 context 的额外参数，请改用 ctx= 传递，或重命名。'
+        assert 'errcode' not in fields, f'{self.__class__.__name__}() 不接受名为 errcode 的参数，请改用 code= 传递。'
+        assert 'message' not in fields, f'{self.__class__.__name__}() 不接受名为 message 的参数，请改用 msg= 传递。'
+        assert 'context' not in fields, f'{self.__class__.__name__}() 不接受名为 context 的参数，请改用 ctx= 传递。'
         self.args = code, msg, ctx, fields
         self.errcode = code
         self.message = msg

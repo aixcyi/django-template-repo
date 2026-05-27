@@ -31,6 +31,7 @@ class SoftDeleteModelMixin:
 
     适用于：``rest_framework.generics.GenericAPIView`` 的子类
     """
+
     deletion_field = 'deleted'
     deletion_mark = True
 
@@ -42,7 +43,8 @@ class SoftDeleteModelMixin:
     def perform_soft_delete(self, instance):
         if not hasattr(instance, self.deletion_field):
             raise TypeError(
-                '模型 %s 没有用于标记删除的字段 %s 。' % (
+                '模型 %s 没有用于标记删除的字段 %s 。'
+                % (
                     type(instance).__name__,
                     self.deletion_field,
                 )
@@ -90,22 +92,22 @@ class MeowAPIView(APIView):
         return super().handle_exception(exc)
 
 
-class MeowViewSet(EasyViewSetMixin,
-                  MeowAPIView,
-                  GenericAPIView):
+class MeowViewSet(EasyViewSetMixin, MeowAPIView, GenericAPIView):
     """
     此类是对基于API接口集合的视图类（GenericAPIView+ViewSetMixin）的定制。
     """
+
     pass
 
 
-class MeowModelViewSet(mixins.CreateModelMixin,
-                       mixins.ListModelMixin,
-                       mixins.RetrieveModelMixin,
-                       mixins.UpdateModelMixin,
-                       SoftDeleteModelMixin,
-                       MeowViewSet):
-
+class MeowModelViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    SoftDeleteModelMixin,
+    MeowViewSet,
+):
     def finalize_response(self, request, response: Response, *args, **kwargs):
         old = super().finalize_response(request, response, *args, **kwargs)
 

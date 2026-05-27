@@ -67,11 +67,11 @@ class Errcode(IntegerChoices):
 
 
 def _standardize(
-        data: Any,
-        errcode: Errcode,
-        message: str = None,
-        context: Any = None,
-        **fields: Any,
+    data: Any,
+    errcode: Errcode,
+    message: str = None,
+    context: Any = None,
+    **fields: Any,
 ) -> dict:
     """
     构造标准的响应格式。
@@ -108,12 +108,12 @@ def _standardize(
 
 # 该函数可能会被高频使用，因此简写参数名。
 def resp200(
-        data: Any = None,
-        *,
-        code: Errcode = Errcode.DONE,
-        msg: str = None,
-        ctx: Any = None,
-        **fields: Any,
+    data: Any = None,
+    *,
+    code: Errcode = Errcode.DONE,
+    msg: str = None,
+    ctx: Any = None,
+    **fields: Any,
 ) -> Response:
     """
     构造具有标准格式的响应。
@@ -138,9 +138,9 @@ def resp200(
     :param fields: 其它需要加入到响应报文的字段，不能含有 ``errcode``，``message`` 与 ``context`` 三个字段。
     :return: Django REST Framework 响应对象 :class:`Response` 。
     """
-    assert 'errcode' not in fields, f'{resp200.__name__}() 不能接受名为 errcode 的额外参数，请改用 code= 传递，或重命名。'
-    assert 'message' not in fields, f'{resp200.__name__}() 不能接受名为 message 的额外参数，请改用 msg= 传递，或重命名。'
-    assert 'context' not in fields, f'{resp200.__name__}() 不能接受名为 context 的额外参数，请改用 ctx= 传递，或重命名。'
+    assert 'errcode' not in fields, f'{resp200.__name__}() 不接受名为 errcode 的额参数，请改用 code= 传递。'
+    assert 'message' not in fields, f'{resp200.__name__}() 不接受名为 message 的额参数，请改用 msg= 传递。'
+    assert 'context' not in fields, f'{resp200.__name__}() 不接受名为 context 的额参数，请改用 ctx= 传递。'
     body = _standardize(data, errcode=code, message=msg, context=ctx, **fields)
     return Response(body)
 

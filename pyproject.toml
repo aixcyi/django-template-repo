@@ -12,4 +12,5 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "djangorestframework-stubs~=3.17",
+    "ruff",
 ]

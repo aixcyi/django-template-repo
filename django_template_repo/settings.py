@@ -28,10 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # 三方库的
     'rest_framework',
-
     # 项目定义的
     'apps.core.configs.CoreConfig',
 ]
@@ -185,7 +183,7 @@ LOGGING = dict(
         ),
         'standard': dict(
             format=(
-                '[%(asctime)s] '
+                '[%(asctime)s] '  #
                 '[%(name)s/%(levelname)s] '
                 '[%(module)s.%(funcName)s:%(lineno)d]: '
                 '%(message)s'
@@ -204,7 +202,7 @@ LOGGING = dict(
             '.': {
                 'default_time_format': '%H:%M:%S',  # 控制台只打印时间就够了，日期部分没必要打印
             },
-        }
+        },
     },
     # 过滤器
     # https://docs.python.org/zh-cn/3/library/logging.html#logging.Filter
@@ -311,7 +309,6 @@ REST_FRAMEWORK = dict(
     # 异常处理
     # https://www.django-rest-framework.org/api-guide/settings/#exception_handler
     EXCEPTION_HANDLER='rest_framework.views.exception_handler',
-
     # API 策略
     DEFAULT_RENDERER_CLASSES=[
         'rest_framework.renderers.JSONRenderer',
@@ -330,8 +327,8 @@ REST_FRAMEWORK = dict(
         # 'rest_framework.permissions.AllowAny',
     ],
     DEFAULT_THROTTLE_CLASSES=[
+        #
     ],
-
     # 时间处理
     DATE_FORMAT='%Y-%m-%d',
     TIME_FORMAT='%H:%M:%S',
