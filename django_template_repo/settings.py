@@ -343,4 +343,8 @@ REST_FRAMEWORK = dict(
 # 项目部署地址（不应以 / 结尾）
 EGO_ENDPOINT = 'https://localhost:23333'
 
+# 微信 API
+WECHAT_APP_ID = ''
+WECHAT_APP_SECRET = ''
+
 # ...

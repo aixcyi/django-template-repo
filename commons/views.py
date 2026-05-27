@@ -5,9 +5,6 @@ __all__ = [
     'MeowModelViewSet',
 ]
 
-# TODO: Python 3.11 新增，请按照实际依赖进行修改。
-from http import HTTPMethod
-
 from django.db import IntegrityError
 from rest_framework import mixins, status
 from rest_framework.exceptions import APIException
@@ -19,6 +16,7 @@ from rest_framework.views import APIView
 
 from commons.exceptions import MeowViewException
 from commons.response import Errcode, standardize
+from utils.http import HTTPMethod
 from utils.views import EasyViewSetMixin
 
 
