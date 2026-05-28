@@ -2,10 +2,13 @@
 微信 API 接口。
 """
 
+# TODO: 这既是微信 API 接口的简易封装，数量不多那么可堪一用；也是 ServiceRequest 的一个使用示例，快速对接功能不多的第二方服务接口。
+
 import logging
 from typing import Literal
 
 from django.conf import settings
+from django.core.cache import cache
 from django.db.models import IntegerChoices
 from zeraora.string import StringBuilder
 
@@ -16,9 +19,9 @@ from utils.request import ServiceRequest
 logger = logging.getLogger('project.api.wechat')
 
 
-# TODO: 按需增补状态码。
+# TODO: 微信 API 的 errcode 太多，不太适合枚举，这里仅作展示；第二方服务 errcode 不多，用起来倒是相当方便。
 # https://developers.weixin.qq.com/doc/oplatform/Return_codes/Return_code_descriptions_new.html
-class WechatErrcode(IntegerChoices):
+class WeChatErrcode(IntegerChoices):
     EXCEED_API_RATE = 45011, '请求过快'
     LOGGING_BLOCKED = 40226, '用户无法登录'
     INVALID_CODE = 40029, 'code无效'
@@ -26,7 +29,8 @@ class WechatErrcode(IntegerChoices):
     FAILED = -1, '微信系统错误'
 
 
-class WechatRequest(ServiceRequest):
+# noinspection PyPep8Naming
+class WeChatRequest(ServiceRequest):
     """
     微信服务请求对象。
     """
@@ -42,8 +46,13 @@ class WechatRequest(ServiceRequest):
         super().__init__(method, path, **kwargs)
         self.headers.setdefault('Accept', 'application/json')
 
-    # TODO: 按照喜好定制行为逻辑，包括但不限于删除或修改日志消息、改变响应数据的解析、异常处理……
     def send(self):
+        """
+        执行请求，返回响应。
+
+        - 详细记录请求细节与响应结果（发送到日志系统）。
+        - 对底层 API 的错误处理。
+        """
         try:
             logger.info(
                 StringBuilder()
@@ -66,10 +75,10 @@ class WechatRequest(ServiceRequest):
                 .build()
             )
             body = response.json()
-            code = int(body.pop('errcode', WechatErrcode.SUCCEED))
-            resp = WechatResponse(
+            code = int(body.pop('errcode', WeChatErrcode.SUCCEED))
+            resp = WeChatResponse(
                 __errcode__=code,
-                errcode=WechatErrcode(code) if code in WechatErrcode else WechatErrcode.FAILED,
+                errcode=WeChatErrcode(code) if code in WeChatErrcode else WeChatErrcode.FAILED,
                 errmsg=str(body.pop('errmsg', '')),
                 **body,
             )
@@ -81,19 +90,19 @@ class WechatRequest(ServiceRequest):
     @classmethod
     def get(cls, api: str, **kwargs):
         resp = cls('GET', api, **kwargs).send()
-        if resp.errcode < WechatErrcode.SUCCEED:
+        if resp.errcode < WeChatErrcode.SUCCEED:
             raise MeowViewException(msg=resp.errmsg, wxapi=resp.__errcode__, **resp.fields())
         return resp
 
     @classmethod
     def post(cls, api: str, **kwargs):
         resp = cls('POST', api, **kwargs).send()
-        if resp.errcode < WechatErrcode.SUCCEED:
+        if resp.errcode < WeChatErrcode.SUCCEED:
             raise MeowViewException(msg=resp.errmsg, wxapi=resp.__errcode__, **resp.fields())
         return resp
 
     @classmethod
-    def code2session(cls, js_code):
+    def code2session(cls, js_code: str, appid: str | None = None, secret: str | None = None):
         """
         微信
         `code2session <https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-login/code2Session.html>`_
@@ -101,19 +110,19 @@ class WechatRequest(ServiceRequest):
         return cls.get(
             '/sns/jscode2session',
             params={
-                'appid': settings.WECHAT_APP_ID,
-                'secret': settings.WECHAT_APP_SECRET,
+                'appid': appid or settings.WECHAT_APP_ID,
+                'secret': secret or settings.WECHAT_APP_SECRET,
                 'js_code': js_code,
                 'grant_type': 'authorization_code',
             },
         )
 
 
-class WechatResponse:
+class WeChatResponse:
     STANDARD_FIELDS = 'errcode', 'errmsg'
 
     __errcode__: int
-    errcode: WechatErrcode
+    errcode: WeChatErrcode
     errmsg: str
 
     def __init__(self, **attrs):
@@ -135,3 +144,30 @@ class WechatResponse:
             for attr in self.__dict__
             if attr not in self.STANDARD_FIELDS and not attr.startswith('__')
         }
+
+
+# noinspection PyPep8Naming
+class WeChatClient:
+    def __init__(self, app_id: str | None = None, app_secret: str | None = None):
+        self.appid = app_id or settings.WECHAT_APP_ID
+        self.secret = app_secret or settings.WECHAT_APP_SECRET
+
+    def getAccessToken(self):
+        """
+        微信
+        `getAccessToken <https://developers.weixin.qq.com/miniprogram/dev/server/API/mp-access-token/api_getaccesstoken.html>`_
+        """
+        if token := cache.get(f'WeChat:AccessToken:{self.appid}'):
+            return token
+        response = WeChatRequest.get(
+            '/cgi-bin/token',
+            params={
+                'appid': self.appid,
+                'secret': self.secret,
+                'grant_type': 'client_credential',
+            },
+        )
+        token = str(response.access_token)
+        timeout = int(response.expires_in)
+        cache.set(f'WeChat:AccessToken:{self.appid}', token, timeout=timeout)
+        return token
