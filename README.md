@@ -1,28 +1,27 @@
 # Django Template Repo
 
-一个 Django 项目模板。基于 `django-admin` 默认模板定制，不包含任何业务代码，倾向于配合 Django REST Framework 进行前后端分离开发。
+一个 Django 项目模板。基于 `django-admin` 默认模板定制，倾向于配合 Django REST Framework 进行前后端分离开发。
 
 ## 特性
 
-### 架构方面
+### 架构与布局
 
 - 为隔离不同环境（开发环境、测试环境、生产环境）而设计。
 - 预设两个日志文件 `./logs/alarms.log` 和 `./logs/records.log`，控制台仅在调试模式才会打印。
 - 生成更易读的表名，比如 `apps.order.models.GoodsSKUInfo` 会默认创建 `order_goods_sku_info` 表，而不是 `order_goodsskuinfo` 。
 
-### 代码方面
+### 代码与格式
 
 - 拥有更加易查、易读的 `settings.py` 。
 - 预设（Django 推荐）继承 `AbstractUser` 来自定义 `apps.core.models.User` 模型。
 - 潜在改动位置通过 `TODO` 开头的注释进行提示，且均位于单独一行，方便清理。
 - 每个项目都可单独定制 Django App 模板。
 
-## 兼容性
+### 业务与功能
 
-仅对 Django 最新一个 LTS 的正式发布版本兼容，项目版本号跟随 major 变动，Python 兼容性也跟随变动，详情可见
-[Django FAQ](https://docs.djangoproject.com/zh-hans/5.2/faq/install/#what-python-version-can-i-use-with-django)
-或
-[《Django 兼容性简表》](https://blog.navifox.net/refs/nav/django#compatibility)。
+- 简易第二方 API 请求与响应封装。
+- 简易微信 API 封装。
+- 微信小程序 Session-ID 认证。
 
 ## 结构
 
@@ -43,6 +42,7 @@
 
 - `""` 根记录器。
   - `project` 项目内的根记录器。
+    - `api` 第二第三方 API 相关日志的记录器，专供 `./api/` 下的代码调用。
   - `django` 框架使用的根记录器，由框架自带。
     - `django.server` 服务器部分的日志。不向上传递。
     - `django.request` 请求部分的日志。不向上传递。
@@ -356,3 +356,10 @@ DATABASES['default']['USER'] = 'aliyum'
 DATABASES['default']['PASSWORD'] = 'fox-yum-cha'
 CACHES['default']['LOCATION'] = 'redis://127.0.0.1:6379/11'
 ```
+
+## 兼容性
+
+仅对 Django 最新一个 LTS 的正式发布版本兼容，项目版本号跟随 major 变动，Python 兼容性也跟随变动，详情可见
+[Django FAQ](https://docs.djangoproject.com/zh-hans/5.2/faq/install/#what-python-version-can-i-use-with-django)
+或
+[《Django 兼容性简表》](https://blog.navifox.net/refs/nav/django#compatibility)。
