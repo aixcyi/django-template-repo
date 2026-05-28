@@ -29,7 +29,7 @@ class User(AbstractUser, metaclass=SnakeModel):
     nickname = models.CharField('昵称', max_length=100, null=True, default=None)
 
     objects = UserManager()
-    users = ActiveUserManger()
+    members = ActiveUserManger()
 
     class Meta:
         verbose_name = '用户'
