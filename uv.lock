@@ -195,7 +195,7 @@ requires-dist = [
     { name = "djangorestframework", specifier = "~=3.17.1" },
     { name = "djangorestframework-stubs", marker = "extra == 'dev'", specifier = "~=3.17" },
     { name = "psycopg", extras = ["binary", "pool"], specifier = "~=3.3.4" },
-    { name = "requests", specifier = "~=2.34.2" },
+    { name = "requests", specifier = "~=2.34" },
     { name = "ruff", marker = "extra == 'dev'" },
     { name = "zeraora", specifier = "~=0.4.0rc0" },
 ]

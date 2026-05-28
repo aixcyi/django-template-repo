@@ -9,6 +9,7 @@ django_template_repo 的项目设置。
 """
 
 from pathlib import Path
+
 from zeraora.conf import logc
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
@@ -343,7 +344,8 @@ REST_FRAMEWORK = dict(
 # 项目部署地址（不应以 / 结尾）
 EGO_ENDPOINT = 'https://localhost:23333'
 
-# 微信 API
+# 微信服务端 API
+# https://mp.weixin.qq.com/wxamp/devprofile/get_profile?lang=zh_CN
 WECHAT_APP_ID = ''
 WECHAT_APP_SECRET = ''
 
