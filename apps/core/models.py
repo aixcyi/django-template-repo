@@ -27,6 +27,9 @@ class User(AbstractUser, metaclass=SnakeModel):
     id = models.BigAutoField('ID', primary_key=True)
     username = models.CharField('用户名', max_length=50, unique=True, validators=[AbstractUser.username_validator])
     nickname = models.CharField('昵称', max_length=100, null=True, default=None)
+    wx_openid = models.CharField('微信用户 OpenID', max_length=32, blank=True)
+    wx_unionid = models.CharField('微信用户 UnionID', max_length=32, blank=True)
+    wx_session = models.CharField('微信用户 Session Key', max_length=32, blank=True)
 
     objects = UserManager()
     members = ActiveUserManger()
