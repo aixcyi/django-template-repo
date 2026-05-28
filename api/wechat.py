@@ -8,11 +8,11 @@ import logging
 from typing import Literal
 
 from django.conf import settings
-from django.core.cache import cache
 from django.db.models import IntegerChoices
 from zeraora.string import StringBuilder
 
 from commons.exceptions import MeowViewException
+from utils.cache import cacher
 from utils.http import HTTPMethod
 from utils.request import ServiceRequest
 
@@ -157,7 +157,7 @@ class WeChatClient:
         微信
         `getAccessToken <https://developers.weixin.qq.com/miniprogram/dev/server/API/mp-access-token/api_getaccesstoken.html>`_
         """
-        if token := cache.get(f'WeChat:AccessToken:{self.appid}'):
+        if token := cacher[f'WeChat:AccessToken:{self.appid}']:
             return token
         response = WeChatRequest.get(
             '/cgi-bin/token',
@@ -169,5 +169,5 @@ class WeChatClient:
         )
         token = str(response.access_token)
         timeout = int(response.expires_in)
-        cache.set(f'WeChat:AccessToken:{self.appid}', token, timeout=timeout)
+        cacher[f'WeChat:AccessToken:{self.appid}', timeout] = token
         return token
