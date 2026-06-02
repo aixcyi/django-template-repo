@@ -5,7 +5,6 @@ requires-python = ">=3.10"
 dependencies = [
     "Django~=5.2.14",
     "djangorestframework~=3.17.1",
-    "psycopg[binary,pool]~=3.3.4",
     "requests~=2.34",
     "Zeraora~=0.4.0rc0",
 ]
@@ -14,4 +13,11 @@ dependencies = [
 dev = [
     "djangorestframework-stubs~=3.17",
     "ruff",
+]
+
+test = [
+    "djangorestframework-stubs~=3.17",
+    "ruff",
+    "psycopg[binary,pool]~=3.3.4",
+    "redis[hiredis]",
 ]
