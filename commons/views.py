@@ -1,13 +1,28 @@
 __all__ = [
     'SoftDeleteModelMixin',
+    'MeowHandler',
     'MeowAPIView',
     'MeowViewSet',
     'MeowModelViewSet',
 ]
 
+import sys
+from contextlib import AbstractContextManager, ContextDecorator
+from http import HTTPMethod
+from inspect import currentframe
+
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+)
+from django.core.exceptions import (
+    ValidationError as DjangoValidationError,
+)
 from django.db import IntegrityError
 from rest_framework import mixins, status
 from rest_framework.exceptions import APIException
+from rest_framework.exceptions import (
+    ValidationError as RestValidationError,
+)
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.renderers import JSONRenderer
@@ -16,7 +31,6 @@ from rest_framework.views import APIView
 
 from commons.exceptions import MeowViewException
 from commons.response import Errcode, standardize
-from utils.http import HTTPMethod
 from utils.views import EasyViewSetMixin
 
 
@@ -51,6 +65,89 @@ class SoftDeleteModelMixin:
         setattr(instance, self.deletion_field, self.deletion_mark)
 
         instance.save()
+
+
+# noinspection PyPep8Naming
+class MeowHandler(ContextDecorator, AbstractContextManager):
+    """
+    将上下文内特定的异常转换成通用异常 :class:`MeowViewException` 。
+    """
+
+    def __init__(self):
+        self._notfound: str | None = None
+        self._skip_dj = False
+        self._skip_drf = False
+
+    def __exit__(self, klass: type[BaseException] | None, exc: BaseException | None, traceback):
+        if klass is None or exc is None or traceback is None:
+            return
+        match exc:
+            case KeyError():
+                raise MeowViewException(msg=f'解析参数 {exc.args[0]} 不存在')
+            case ValueError():
+                raise MeowViewException(msg='参数解析失败')
+            case TypeError():
+                raise MeowViewException(msg='参数解析类型不一致')
+
+            case ObjectDoesNotExist():
+                if self._notfound is not None:
+                    raise MeowViewException(msg=self._notfound)
+                subclass = klass.mro()[0]
+                model = getattr(sys.modules[subclass.__module__], subclass.__qualname__.split('.')[0])
+                raise MeowViewException(msg=f'{model._meta.verbose_name} 不存在')
+
+            case DjangoValidationError() if not self._skip_dj:
+                major, *minors = exc.messages
+                raise MeowViewException(msg=major, ctx=minors)
+
+            case RestValidationError() if not self._skip_drf:
+                if isinstance(exc.detail, str):
+                    raise MeowViewException(msg=str(exc.detail))
+                else:
+                    raise MeowViewException(msg=str(exc.default_detail), ctx=exc.detail)
+
+    def skipValidation(self, dj=True, drf=True):
+        """
+        忽略验证错误。
+
+        :param dj: 是否忽略 Django 的验证错误。
+        :param drf: 是否忽略 Django REST Framework 的验证错误。
+        :return: 上下文管理器自身。
+        """
+        self._skip_dj = dj
+        self._skip_drf = drf
+        return self
+
+    def catchNotfound(self, msg: str):
+        """
+        捕获并处理 :class:`ObjectDoesNotExist` 及其子类。
+
+        :param msg: 响应的 ``message``，默认为对应 :class:`Errcode` 的提示。
+        :return: 上下文管理器自身。
+        """
+        self._notfound = msg
+        return self
+
+    def typecheck(self, **types: type):
+        """
+        立刻检查上下文内的变量的类型。
+
+        - 如果调用此方法，必须且只能在上下文内直接调用，否则会找不到变量。
+        - 如果找不到指定的变量，将会触发 :class:`AssertionError` 。
+        - 判定方式是 ``is``，不包含子类。
+        - 该方法不会抛出异常。
+
+        :param types: 参数名即变量名，参数值即类型。
+        :return: 上下文管理器自身。
+        """
+        variables = currentframe().f_back.f_locals
+        for name in types:
+            assert name in variables, f'上下文内找不到变量 {name}'
+            if type(variables[name]) is types[name]:
+                continue
+            raise MeowViewException(msg='参数解析类型不一致', ctx={'field': name})
+        else:
+            return self
 
 
 class MeowAPIView(APIView):
@@ -109,7 +206,6 @@ class MeowModelViewSet(
     def finalize_response(self, request, response: Response, *args, **kwargs):
         old = super().finalize_response(request, response, *args, **kwargs)
 
-        # TODO: Python 3.11 以前将判断 method 的逻辑改为直接判断 'GET', 'POST' 等字符串。
         method = HTTPMethod(request.method)
 
         if method == HTTPMethod.OPTIONS:
