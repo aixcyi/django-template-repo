@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 三方库的
     'rest_framework',
+    'rest_framework.authtoken',
     # 项目定义的
     'apps.core.configs.CoreConfig',
 ]
@@ -350,8 +351,7 @@ REST_FRAMEWORK = dict(
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     DEFAULT_AUTHENTICATION_CLASSES=[
-        # TODO: TokenAuthentication 仅支持 “Token xxx” 格式的 Authorization 头，如需 “Bearer xxx” 格式请考虑继承重写。
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],

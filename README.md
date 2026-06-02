@@ -21,6 +21,7 @@
 
 - 简易第二方 API 请求与响应封装。
 - 简易微信 API 封装。
+- 默认启用 Django REST Framework 的 Token 认证。
 
 ## 结构
 
