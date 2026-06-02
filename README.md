@@ -157,71 +157,11 @@ uv run manage.py runserver
 
 ## 配置模板
 
-### PostgreSQL 配置模板
+### 数据库配置模板
 
-[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#postgresql-notes)
-
-```python
-DATABASES = {
-    'default': dict(
-        ENGINE='django.db.backends.postgresql',
-        NAME='数据库名称',
-        USER='postgres',
-        PASSWORD='账号密码',
-        HOST='127.0.0.1',
-        PORT='5432',
-    ),
-}
-```
-
-### MySQL 配置模板
-
-[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#mysql-notes)
-
-```python
-DATABASES = {
-    'default': dict(
-        ENGINE='django.db.backends.mysql',
-        NAME='数据库名称',
-        USER='root',
-        PASSWORD='账号密码',
-        HOST='127.0.0.1',
-        PORT='3306',
-    ),
-}
-```
-
-### Oracle 配置模板
-
-[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#oracle-notes)
-
-```python
-DATABASES = {
-    'default': dict(
-        ENGINE='django.db.backends.oracle',
-        NAME='数据库名称',
-        USER='system',
-        PASSWORD='账号密码',
-        HOST='127.0.0.1',
-        PORT='1521',
-    ),
-}
-```
-
-### SQLite 配置模板
-
-[注意事项](https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#sqlite-notes)
-
-```python
-from django_template_repo.settings import PROJECT_DIR
-
-DATABASES = {
-    'default': dict(
-        ENGINE='django.db.backends.sqlite3',
-        NAME=PROJECT_DIR / '数据库名称.sqlite3',
-    ),
-}
-```
+PostgreSQL、MySQL、Oracle、SQLite 的模板已经放在
+`./django_template_repo/settings.py` 的
+`DATABASES` 中，这里不再赘述。
 
 ### Redis 配置模板
 

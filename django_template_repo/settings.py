@@ -134,9 +134,42 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#databases
 # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/
 DATABASES = {
+    # TODO: 以下是数据库配置模板。可以选择一个来改，改好之后替换掉 default，最后删掉不需要的模板。
+    # SQLite 3
+    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#sqlite-notes
     'default': dict(
         ENGINE='django.db.backends.sqlite3',
         NAME=':memory:',
+    ),
+    # PostgreSQL
+    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#postgresql-notes
+    'postgresql': dict(
+        ENGINE='django.db.backends.postgresql',
+        NAME='数据库名称',
+        USER='postgres',
+        PASSWORD='账号密码',
+        HOST='127.0.0.1',
+        PORT='5432',
+    ),
+    # MySQL
+    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#mysql-notes
+    'mysql': dict(
+        ENGINE='django.db.backends.mysql',
+        NAME='数据库名称',
+        USER='root',
+        PASSWORD='账号密码',
+        HOST='127.0.0.1',
+        PORT='3306',
+    ),
+    # Oracle
+    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#oracle-notes
+    'oracle': dict(
+        ENGINE='django.db.backends.oracle',
+        NAME='数据库名称',
+        USER='system',
+        PASSWORD='账号密码',
+        HOST='127.0.0.1',
+        PORT='1521',
     ),
 }
 
