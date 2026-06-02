@@ -1,9 +1,10 @@
 __all__ = [
-    'ActiveUserManger',
+    'SystemUserManger',
     'User',
+    'WechatUser',
 ]
 
-from random import Random
+from random import choices
 
 from django.contrib.auth.models import AbstractUser, Group, Permission, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -14,15 +15,20 @@ from zeraora.string import Notation
 from zeraora.uuid import uuid7
 
 
-class ActiveUserManger(UserManager):
-    """
-    未注销用户管理器。
-
-    这个管理器的 **默认查询集** 会排除已注销用户。
-    """
+class SystemUserManger(UserManager):
 
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
+
+    def create_user(self, username=None, email=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(username or User.generate_username(), email, password, **extra_fields)
+
+    async def acreate_user(self, username=None, email=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return await self._acreate_user(username or User.generate_username(), email, password, **extra_fields)
 
 
 class User(AbstractUser, metaclass=SnakeModel):
@@ -71,12 +77,20 @@ class User(AbstractUser, metaclass=SnakeModel):
     nickname = models.CharField('昵称', max_length=100, blank=True)
 
     # 管理器
-    objects = UserManager()
-    members = ActiveUserManger()
+    objects = SystemUserManger()
+    members = PrefilterManager(is_active=True)
 
     class Meta:
         verbose_name = '用户'
         verbose_name_plural = '用户'
+
+    @classmethod
+    def generate_username(cls):
+        """
+        生成一个随机的用户名用作默认值。
+        """
+        # TODO: 在这里自定义不同项目的默认用户名。
+        return 'fox' + ''.join(choices(list(Notation.BASE62), k=11))
 
     @property
     def seed(self) -> int:
@@ -91,17 +105,6 @@ class User(AbstractUser, metaclass=SnakeModel):
 
     def get_username(self) -> str:
         return self.username
-
-    def get_username_default(self) -> str:
-        """
-        生成默认的用户名。
-        """
-        # TODO: 在这里自定义不同项目的默认用户名。
-        return f'fox{Random(self.seed).choices(list(Notation.BASE62), k=11)}'
-
-    def save(self, *args, **kwargs):
-        self.username = self.username or self.get_username_default()
-        return super().save(*args, **kwargs)
 
 
 class WechatUser(models.Model, metaclass=SnakeModel):
