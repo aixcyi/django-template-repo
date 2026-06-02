@@ -12,14 +12,13 @@ from django.db.models import IntegerChoices
 from zeraora.string import StringBuilder
 
 from commons.exceptions import MeowViewException
-from utils.cache import cacher
 from utils.http import HTTPMethod
 from utils.request import ServiceRequest
 
 logger = logging.getLogger('project.api.wechat')
 
 
-# TODO: 微信 API 的 errcode 太多，不太适合枚举，这里仅作展示；第二方服务 errcode 不多，用起来倒是相当方便。
+# TODO: 微信的 errcode 太多，只定义用得到的（比如要用来判断、要更友好的提示）就够了。
 # https://developers.weixin.qq.com/doc/oplatform/Return_codes/Return_code_descriptions_new.html
 class WeChatErrcode(IntegerChoices):
     EXCEED_API_RATE = 45011, '请求过快'
@@ -117,6 +116,21 @@ class WeChatRequest(ServiceRequest):
             },
         )
 
+    @classmethod
+    def getAccessToken(cls, appid: str | None = None, secret: str | None = None):
+        """
+        微信
+        `getAccessToken <https://developers.weixin.qq.com/miniprogram/dev/server/API/mp-access-token/api_getaccesstoken.html>`_
+        """
+        return cls.get(
+            '/cgi-bin/token',
+            params={
+                'appid': appid or settings.WECHAT_APP_ID,
+                'secret': secret or settings.WECHAT_APP_SECRET,
+                'grant_type': 'client_credential',
+            },
+        )
+
 
 class WeChatResponse:
     STANDARD_FIELDS = 'errcode', 'errmsg'
@@ -136,6 +150,10 @@ class WeChatResponse:
         attrs = ','.join(f'{attr}={self.__dict__[attr]!s}' for attr in self.__dict__)
         return f'{self.__class__.__name__}({attrs})'
 
+    # TODO: 缺少某个字段时返回 None 而不是抛出 AttributeError。
+    def __getattr__(self, item):
+        return None
+
     def fields(self, with_standard_fields=False) -> dict:
         if with_standard_fields:
             return self.__dict__.copy()
@@ -144,30 +162,3 @@ class WeChatResponse:
             for attr in self.__dict__
             if attr not in self.STANDARD_FIELDS and not attr.startswith('__')
         }
-
-
-# noinspection PyPep8Naming
-class WeChatClient:
-    def __init__(self, app_id: str | None = None, app_secret: str | None = None):
-        self.appid = app_id or settings.WECHAT_APP_ID
-        self.secret = app_secret or settings.WECHAT_APP_SECRET
-
-    def getAccessToken(self):
-        """
-        微信
-        `getAccessToken <https://developers.weixin.qq.com/miniprogram/dev/server/API/mp-access-token/api_getaccesstoken.html>`_
-        """
-        if token := cacher[f'WeChat:AccessToken:{self.appid}']:
-            return token
-        response = WeChatRequest.get(
-            '/cgi-bin/token',
-            params={
-                'appid': self.appid,
-                'secret': self.secret,
-                'grant_type': 'client_credential',
-            },
-        )
-        token = str(response.access_token)
-        timeout = int(response.expires_in)
-        cacher[f'WeChat:AccessToken:{self.appid}', timeout] = token
-        return token
