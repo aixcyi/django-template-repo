@@ -342,7 +342,7 @@ DATETIME_FORMAT = f'{DATE_FORMAT} {TIME_FORMAT}'
 REST_FRAMEWORK = dict(
     # 异常处理
     # https://www.django-rest-framework.org/api-guide/settings/#exception_handler
-    EXCEPTION_HANDLER='rest_framework.views.exception_handler',
+    EXCEPTION_HANDLER='commons.views.meow_exception_handler',
     # API 策略
     DEFAULT_RENDERER_CLASSES=[
         'rest_framework.renderers.JSONRenderer',

@@ -1,5 +1,6 @@
 __all__ = [
     'SoftDeleteModelMixin',
+    'meow_exception_handler',
     'MeowHandler',
     'MeowAPIView',
     'MeowViewSet',
@@ -10,6 +11,7 @@ import sys
 from contextlib import AbstractContextManager, ContextDecorator
 from http import HTTPMethod
 from inspect import currentframe
+from typing import Any
 
 from django.core.exceptions import (
     ObjectDoesNotExist,
@@ -27,7 +29,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.views import APIView, exception_handler
 
 from commons.exceptions import MeowViewException
 from commons.response import Errcode, standardize
@@ -65,6 +67,17 @@ class SoftDeleteModelMixin:
         setattr(instance, self.deletion_field, self.deletion_mark)
 
         instance.save()
+
+
+def meow_exception_handler(exc: Exception, context: dict[str, Any]):
+    """
+    全局视图异常处理。
+    """
+    match exc:
+        case MeowViewException():
+            return exc.as_response()
+        case _:
+            return exception_handler(exc, context)
 
 
 # noinspection PyPep8Naming
