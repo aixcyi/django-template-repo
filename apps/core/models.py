@@ -1,5 +1,5 @@
 __all__ = [
-    'SystemUserManger',
+    'SystemUserManager',
     'User',
     'WechatUser',
 ]
@@ -15,8 +15,7 @@ from zeraora.string import Notation
 from zeraora.uuid import uuid7
 
 
-class SystemUserManger(UserManager):
-
+class SystemUserManager(UserManager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
 
@@ -77,7 +76,7 @@ class User(AbstractUser, metaclass=SnakeModel):
     nickname = models.CharField('昵称', max_length=100, blank=True)
 
     # 管理器
-    objects = SystemUserManger()
+    objects = SystemUserManager()
     members = PrefilterManager(is_active=True)
 
     class Meta:

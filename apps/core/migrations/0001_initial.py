@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 'db_table': 'core_user',
             },
             managers=[
-                ('objects', apps.core.models.SystemUserManger()),
+                ('objects', apps.core.models.SystemUserManager()),
             ],
         ),
         migrations.CreateModel(
