@@ -15,14 +15,12 @@ from typing import Any
 
 from django.core.exceptions import (
     ObjectDoesNotExist,
-)
-from django.core.exceptions import (
     ValidationError as DjangoValidationError,
 )
 from django.db import IntegrityError
 from rest_framework import mixins, status
-from rest_framework.exceptions import APIException
 from rest_framework.exceptions import (
+    APIException,
     ValidationError as RestValidationError,
 )
 from rest_framework.generics import GenericAPIView

@@ -3,5 +3,8 @@ extend-exclude = [
     "**/migrations/*.py",
 ]
 
+[lint.isort]
+combine-as-imports = true
+
 [format]
 quote-style = "single"
