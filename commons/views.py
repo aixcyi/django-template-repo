@@ -1,7 +1,7 @@
 __all__ = [
     'SoftDeleteModelMixin',
-    'meow_exception_handler',
     'MeowHandler',
+    'meow_exception_handler',
     'MeowAPIView',
     'MeowViewSet',
     'MeowModelViewSet',
@@ -65,17 +65,6 @@ class SoftDeleteModelMixin:
         setattr(instance, self.deletion_field, self.deletion_mark)
 
         instance.save()
-
-
-def meow_exception_handler(exc: Exception, context: dict[str, Any]):
-    """
-    全局视图异常处理。
-    """
-    match exc:
-        case MeowViewException():
-            return exc.as_response()
-        case _:
-            return exception_handler(exc, context)
 
 
 # noinspection PyPep8Naming
@@ -161,6 +150,29 @@ class MeowHandler(ContextDecorator, AbstractContextManager):
             return self
 
 
+def meow_exception_handler(exc: Exception, context: dict[str, Any]) -> Response | None:
+    """
+    全局视图异常处理。
+    """
+    match exc:
+        # Django 捕获的来自数据库的异常
+        case IntegrityError():
+            return Errcode.FAILED(str(exc))
+
+        # Django REST Framework 异常根类
+        case APIException() if isinstance(exc.detail, str):
+            return Errcode.FAILED(str(exc.detail))
+        case APIException():
+            return Errcode.FAILED(str(exc.default_detail), ctx=exc.detail)
+
+        # 项目自定义的异常根类
+        case MeowViewException():
+            return exc.as_response()
+
+        case _:
+            return exception_handler(exc, context)
+
+
 class MeowAPIView(APIView):
     """
     此类是对基于API的视图类（APIView）的定制。
@@ -180,22 +192,10 @@ class MeowAPIView(APIView):
         """
         异常处理与响应封装。
         """
-        # Django 捕获的来自数据库的异常
-        if isinstance(exc, IntegrityError):
-            return Errcode.FAILED(str(exc))
-
-        # Django REST Framework 异常根类
-        if isinstance(exc, APIException):
-            if isinstance(exc.detail, str):
-                return Errcode.FAILED(str(exc.detail))
-            else:
-                return Errcode.FAILED(str(exc.default_detail), ctx=exc.detail)
-
-        # 项目自定义的异常根类
-        if isinstance(exc, MeowViewException):
-            return exc.as_response()
-
-        return super().handle_exception(exc)
+        if response := meow_exception_handler(exc, dict()):
+            return response
+        else:
+            return super().handle_exception(exc)
 
 
 class MeowViewSet(EasyViewSetMixin, MeowAPIView, GenericAPIView):
