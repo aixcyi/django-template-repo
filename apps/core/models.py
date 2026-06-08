@@ -41,9 +41,9 @@ class User(AbstractUser, metaclass=SnakeModel):
     # 标识符／认证字段
     id = models.BigAutoField('ID', primary_key=True)
     uid = models.UUIDField('用户唯一ID', unique=True, default=uuid7, editable=False)
-    username = models.CharField('用户名', max_length=50, unique=True, validators=[username_validator])
-    password = models.CharField('密码', max_length=128)
-    email = models.EmailField('电子邮箱', blank=True)
+    username = models.CharField('登录用户名', max_length=50, unique=True, validators=[username_validator])
+    password = models.CharField('登录密码', max_length=128)
+    email = models.EmailField('登录邮箱', blank=True)
 
     # 鉴权字段
     is_superuser = models.BooleanField('是超级管理员', default=False, help_text='指无须显式分配即可拥有所有权限')
