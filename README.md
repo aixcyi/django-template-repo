@@ -27,16 +27,18 @@
 
 ### 目录结构（按依赖先后排序）
 
-| 目录                       | 含义   | 描述                            |
-|--------------------------|------|-------------------------------|
-| `./utils`                | 通用工具 | 跨项目的、通用的工具或代码。                |
-| `./api`                  | 封装接口 | 与第三方和第二方交互的请求接口及响应处理。         |
-| `./commons`              | 定制工具 | 仅适用于当前项目的工具或对框架的定制。           |
-| `./django_template_repo` | 项目配置 | Django Settings、总路由等。         |
-| `./apps`                 | 业务   | 项目内的所有 Django App。            |
-| `./apps/template`        | 模板   | 项目内 Django App 的模板。           |
-| `./apps/core`            | 核心工具 | 被项目内其它所有 Django App 依赖的工具或代码。 |
-| `./logs`                 | 日志   | 使用[配置模板](#配置模板)可在首次运行时自动生成。   |
+| 目录                       | 含义   | 描述                                    |
+|--------------------------|------|---------------------------------------|
+| `./logs`                 | 日志文件 | 存储运行日志。完全按照[用法](#用法)配置后，首次运行时自动生成。    |
+| `./static`               | 静态文件 | 存储项目静态文件。完全按照[用法](#用法)配置后，首次运行时自动生成。  |
+| `./uploads`              | 上传文件 | 存储用户上传的文件。完全按照[用法](#用法)配置后，首次运行时自动生成。 |
+| `./utils`                | 通用工具 | 跨项目的、通用的工具或代码。                        |
+| `./api`                  | 封装接口 | 与第三方和第二方交互的请求接口及响应处理。                 |
+| `./commons`              | 定制工具 | 仅适用于当前项目的工具或对框架的定制。                   |
+| `./django_template_repo` | 项目配置 | Django Settings、总路由等。                 |
+| `./apps`                 | 业务   | 项目内的所有 Django App。                    |
+| `./apps/template`        | 模板   | 项目内 Django App 的模板。                   |
+| `./apps/core`            | 核心工具 | 被项目内其它所有 Django App 依赖的工具或代码。         |
 
 ### 日志记录器
 
@@ -64,9 +66,9 @@
 ## 用法
 
 > [!IMPORTANT]  
-> 从 Django Template Repo v5.0 开始，默认采用 uv 管理项目、维护依赖、说明用法。
+> 从 Django Template Repo v5.0 开始，默认采用 [uv](https://docs.astral.sh/uv/) 管理项目、维护依赖、说明用法。
 
-### 第一步，克隆仓库
+### 第一步：克隆仓库
 
 可以在 GitHub
 中[从模板创建仓库](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)，然后通过以下命令克隆到本地。
@@ -75,18 +77,30 @@
 git clone 你的仓库地址 项目新名称
 ```
 
-如果不希望创建一个新的 GitHub 仓库，可以使用以下命令得到只有一条历史记录的本地仓库。
+如果不希望创建一个新的 GitHub 仓库，或者不使用 GitHub 平台，可以使用以下命令得到只有一条历史记录的本地仓库。
 
 ```shell
 git clone --depth 1 git@github.com:aixcyi/django-template-repo.git 项目新名称
 ```
 
-### 第二步，安装依赖
+### 第二步：安装依赖
 
 > [!TIP]  
 > [我应该使用哪个版本的 Python 来配合 Django？](https://docs.djangoproject.com/zh-hans/5.2/faq/install/#what-python-version-can-i-use-with-django)
 
-创建并激活虚拟环境：
+模板更推荐使用 [uv](https://docs.astral.sh/uv/) 安装管理 Python 和虚拟环境，执行以下命令
+
+```shell
+uv --version
+```
+
+之后打印出如下格式的文本即可说明已经成功安装：
+
+```text
+uv 0.11.16 (135a36367 2026-05-21 x86_64-pc-windows-msvc)
+```
+
+现在以 Python 3.10 为例创建并激活虚拟环境：
 
 ```shell
 uv venv --python 3.10
@@ -106,48 +120,87 @@ uv sync --extra dev
 
 以上两条命令二选一执行即可。
 
-### 第三步，定制代码
+### 第三步：命名项目
 
-1. 将 `./django_template_repo` 重命名为你的 **项目名**（需要符合 Python 包命名规则）；
-2. 查找所有以 `TODO` 开头的注释，并按照提示根据实际需要进行修改；
-3. 根据需要创建自定义配置文件 `./django_template_repo/settings_dev.py`（也可以是其它名字，但建议放在同一个文件夹）。
+1. 重命名目录 `./django_template_repo/` 为你的项目名（需要符合 Python 包命名规则）；
+2. 全局搜索并替换字符串 `django_template_repo` 为你的项目名（需要符合 Python 包命名规则）；
+3. 修改 `./pyproject.toml` 下 `[project]` 一节中的 `name` 为你的项目名称、`version` 为你的项目版本号。
 
-### 第四步，配置 Settings
-
-可以参见下方的[配置模板](#配置模板)选取代码快速配置。
+### 第四步：配置环境
 
 > [!NOTE]  
 > Django 文档：[Settings 快速配置](https://docs.djangoproject.com/zh-hans/5.2/topics/settings/)  
 > Django 文档：[Settings 完整配置列表](https://docs.djangoproject.com/zh-hans/5.2/ref/settings/)  
 > Django REST Framework 文档 [Settings 部分](https://www.django-rest-framework.org/api-guide/settings/)
 
-`./django_template_repo/settings_*.py` 不会被纳入版本管理，
-你可以通过创建不同命名的配置来实现生产环境和开发环境的隔离，
-比如用 `settings_dev.py` 配置开发环境，用 `settings_prod.py` 来配置生产环境。
+> 这一步以 PostgreSQL 和 Redis 为例，Redis 的配置可以参考[附录：Redis 配置模板](#附录：Redis-配置模板)，其它工具可以参考使用
+> `DATABASES` 和 `CACHES` 除了 `default` 之外的配置。
 
-执行以下命令可以快速生成任意个 `SECRET_KEY` 以供挑选：
+修改 `./django_template_repo/settings.py` 下的 `DATABASES` 和 `CACHES`
+并根据需要删去除了 `default` 之外的其它配置（这么做是为了统一开发、测试、生产环境）：
 
-```shell
-uv run manage.py genkey -n 20
+```python
+DATABASES = {
+    'default': dict(
+        ENGINE='django.db.backends.postgresql',
+        NAME='django_template_repo',
+        USER='postgres',
+        PASSWORD='postgres',
+        HOST='127.0.0.1',
+        PORT='5432',
+    ),
+}
+CACHES = {
+    'default': dict(
+        BACKEND='django.core.cache.backends.redis.RedisCache',
+        LOCATION='redis://127.0.0.1:6379/0',
+    ),
+}
 ```
 
-### 第五步，按需创建 Django App
+创建 `./django_template_repo/settings_dev.py` 用于配置开发环境：
 
-> [!NOTE]  
-> 可按照喜好或项目规范改动 `./apps/template` 下的文件。
->
-> 这是独属于当前项目的 Django App 模板；仓库默认配备了 Django REST Framework 的 `serializers.py`
-> 以及 `urls.py`，同时为了适配统一存储，将 `apps.py` 更名为 `configs.py`。
+> 执行 `uv run manage.py genkey -n 20` 可以快速生成 20 个 `SECRET_KEY` 以供挑选。
 
-执行以下命令即可在 `settings.APPS_ROOT` 下按照模板 `./apps/template` 创建一个 Django App：
+```python
+from django_template_repo.settings import *
 
-```shell
-uv run manage.py addapp <APPNAME>
+DEBUG = True
+SECRET_KEY = '<Z~Bhb@?39U0EcX31IKEQ^93GlQt-o-x8QXH#sE7=Ci?gJ4J49nOKir?WMR3`EhyjOt%uivqAZ!Ka;uL'
+ALLOWED_HOSTS = ['*']
+DATABASES['default']['NAME'] = 'django_template_repo'
+DATABASES['default']['USER'] = 'postgres'
+DATABASES['default']['PASSWORD'] = 'postgres'
+CACHES['default']['LOCATION'] = 'redis://127.0.0.1:6379/0'
+LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
+MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
+STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
 ```
 
-`addapp` 与 django-admin 的 `startapp` 所使用的模板互不影响。
+创建 `./django_template_repo/settings_prod.py` 用于配置生产环境：
 
-### 第六步，运行项目
+> [!IMPORTANT]  
+> 切记，生产环境中的
+> [`SECRET_KEY`](https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#std-setting-SECRET_KEY)
+> 应当与其它 **所有环境** 都不相同。
+
+```python
+from django_template_repo.settings import *
+
+DEBUG = False
+SECRET_KEY = 'Yl#}JDJ>>>tWhU{z1#yPmgu_Js^h6*SVqd*DYSE{FpNi8vtY;5W!gJq;?793?5jfF+IdH0z>&WPRG=-?'
+DATABASES['default']['NAME'] = 'django_template_repo'
+DATABASES['default']['USER'] = 'aliyum'
+DATABASES['default']['PASSWORD'] = 'fox-yum-cha'
+CACHES['default']['LOCATION'] = 'redis://127.0.0.1:6379/0'
+```
+
+### 第五步：定制项目
+
+1. 按照喜好或需要删除或改编这个 README 文件；
+2. 查找所有以 `TODO: ` 开头的注释，并按照提示根据实际需要进行修改。
+
+### 第六步：运行项目
 
 执行以下命令运行项目：
 
@@ -155,15 +208,7 @@ uv run manage.py addapp <APPNAME>
 uv run manage.py runserver
 ```
 
-## 配置模板
-
-### 数据库配置模板
-
-PostgreSQL、MySQL、Oracle、SQLite 的模板已经放在
-`./django_template_repo/settings.py` 的
-`DATABASES` 中，这里不再赘述。
-
-### Redis 配置模板
+### 附录：Redis 配置模板
 
 从 Django 4.0 开始可以使用自带的 [`RedisCache`](https://docs.djangoproject.com/zh-hans/5.2/topics/cache/#redis)
 作为缓存后端来使用 Redis：
@@ -222,79 +267,93 @@ CACHES = {
 }
 ```
 
-### 环境快速配置模板
+## 工作流
 
-#### `settings.py`
+### 创建 Django App
 
-为所有环境统一技术栈，尽量将环境保持在相近的状态。
+在 `settings.APPS_ROOT` 指定的目录下按照模板 `./apps/template`
+创建一个 Django App（将 `<APPNAME>` 替换为你需要的 App 包名）：
 
-```python
-DEBUG = False
-SECRET_KEY = None
-ALLOWED_HOSTS = [
-    '.localhost',
-    '127.0.0.1',
-    '[::1]',
-]
-DATABASES = {
-    'default': dict(
-        ENGINE='django.db.backends.postgresql',
-        NAME='DjangoTemplateRepoDatabase',
-        USER='postgres',
-        PASSWORD='postgres',
-        HOST='127.0.0.1',
-        PORT='5432',
-    ),
-}
-CACHES = {
-    'default': dict(
-        BACKEND='django.core.cache.backends.redis.RedisCache',
-        LOCATION='redis://127.0.0.1:6379/15',
-    ),
-}
+```shell
+uv run manage.py addapp <APPNAME>
 ```
 
-#### `settings_dev.py`
+> [!NOTE]  
+> `./apps/template` 是独属于 **当前项目** 的 Django App 模板，与
+> django-admin 的 `startapp` 所使用的模板互不影响；默认配备了
+> Django REST Framework 的 `serializers.py`
+> 以及 `urls.py`，可以按照喜好或需求改动，同时为了适配统一存储，将
+> `apps.py` 更名为 `configs.py`。
 
-适用于开发环境或测试环境，运行时自动创建一些目录来方便快速启动。
+### 生成迁移文件
 
-```python
-from django_template_repo.settings import *
-
-DEBUG = True
-SECRET_KEY = '<Z~Bhb@?39U0EcX31IKEQ^93GlQt-o-x8QXH#sE7=Ci?gJ4J49nOKir?WMR3`EhyjOt%uivqAZ!Ka;uL'
-ALLOWED_HOSTS = ['*']
-DATABASES['default']['NAME'] = 'django_template_repo'
-DATABASES['default']['USER'] = 'postgres'
-DATABASES['default']['PASSWORD'] = 'postgres'
-CACHES['default']['LOCATION'] = 'redis://127.0.0.1:6379/0'
-LOGS_DIR.mkdir(exist_ok=True)  # 日志目录
-MEDIA_ROOT.mkdir(exist_ok=True)  # 用户上传目录
-STATIC_ROOT.mkdir(exist_ok=True)  # 静态文件目录
+```shell
+uv run manage.py makemigrations
 ```
 
-#### `settings_prod.py`
+### 执行迁移
 
-适用于生产环境。
+```shell
+uv run manage.py migrate
+```
 
-> [!IMPORTANT]  
-> 切记，生产环境中的 [`SECRET_KEY`](https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#std-setting-SECRET_KEY)
-> 应与其它所有环境都不同。
+### 运行项目
 
-```python
-from django_template_repo.settings import *
+可以默认在 `127.0.0.1:8000` 下运行：
 
-DEBUG = False
-SECRET_KEY = 'Yl#}JDJ>>>tWhU{z1#yPmgu_Js^h6*SVqd*DYSE{FpNi8vtY;5W!gJq;?793?5jfF+IdH0z>&WPRG=-?'
-ALLOWED_HOSTS = [  # DEBUG=False 时必须配置为非空列表
-    '.localhost',
-    '127.0.0.1',
-    '[::1]',
-]
-DATABASES['default']['NAME'] = 'django_template_repo'
-DATABASES['default']['USER'] = 'aliyum'
-DATABASES['default']['PASSWORD'] = 'fox-yum-cha'
-CACHES['default']['LOCATION'] = 'redis://127.0.0.1:6379/11'
+```shell
+uv run manage.py runserver
+```
+
+也可以用指定的 IP 和端口运行：
+
+```shell
+uv run manage.py runserver 127.0.0.1:22333
+```
+
+### 格式化代码
+
+格式化项目内的所有代码：
+
+```shell
+ruff format
+```
+
+格式化指定文件或文件夹：
+
+```shell
+ruff format ./
+```
+
+### 检查代码
+
+```shell
+ruff check
+```
+
+### 添加依赖
+
+以 `pandas` 为例：
+
+```shell
+uv pip install pandas
+```
+
+记得一并修改 `pyproject.toml` 。
+
+### 同步项目依赖
+
+执行过 `uv pip install` 安装包或 `uv pip uninstall` 卸载包之后，需要手动修改
+`pyproject.toml` 的 `project.dependencies`，然后执行：
+
+```shell
+uv sync
+```
+
+如果还需要安装 `project.optional-dependencies` 下的可选依赖（以 `dev` 组为例），可以改为执行：
+
+```shell
+uv sync --extra dev
 ```
 
 ## 兼容性
