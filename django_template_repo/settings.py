@@ -131,80 +131,38 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # -------------------------------- 存储 --------------------------------
 
-# 文件存储
-# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#storages
-# 管理文件：https://docs.djangoproject.com/zh-hans/5.2/topics/files/
-# 管理静态文件：https://docs.djangoproject.com/zh-hans/5.2/ref/contrib/staticfiles/
-STORAGES = {
-    'default': dict(
-        BACKEND='django.core.files.storage.FileSystemStorage',
-    ),
-    'sstaticfiles': dict(
-        BACKEND='django.contrib.staticfiles.storage.StaticFilesStorage',
-    ),
-    # TODO: 以下是文件存储配置模板，可以按照需要选一个替换掉 default，最后删掉不需要的模板。sstaticfiles 用于管理静态文件，一般不需要改动。
-    's3': dict(
-        BACKEND='storages.backends.s3.S3Storage',
-        OPTIONS={
-            'access_key': '公钥',
-            'secret_key': '私钥',
-            'bucket_name': '桶名称',
-            'endpoint_url': 'http://127.0.0.1:9000',
-            'querystring_auth': False,
-            'use_ssl': False,
-        },
-    ),
-}
-
 # 数据库
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#databases
 # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/
+# TODO: 可参考 ./docs/DATABASE.md 中的配置模板替换 default。
 DATABASES = {
-    # SQLite 3
-    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#sqlite-notes
     'default': dict(
         ENGINE='django.db.backends.sqlite3',
         NAME=':memory:',
-    ),
-    # TODO: 以下是数据库配置模板，可以按照需要选一个替换掉 default，最后删掉不需要的模板。
-    # PostgreSQL
-    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#postgresql-notes
-    'postgresql': dict(
-        ENGINE='django.db.backends.postgresql',
-        NAME='数据库名称',
-        USER='postgres',
-        PASSWORD='账号密码',
-        HOST='127.0.0.1',
-        PORT='5432',
-    ),
-    # MySQL
-    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#mysql-notes
-    'mysql': dict(
-        ENGINE='django.db.backends.mysql',
-        NAME='数据库名称',
-        USER='root',
-        PASSWORD='账号密码',
-        HOST='127.0.0.1',
-        PORT='3306',
-    ),
-    # Oracle
-    # https://docs.djangoproject.com/zh-hans/5.2/ref/databases/#oracle-notes
-    'oracle': dict(
-        ENGINE='django.db.backends.oracle',
-        NAME='数据库名称',
-        USER='system',
-        PASSWORD='账号密码',
-        HOST='127.0.0.1',
-        PORT='1521',
     ),
 }
 
 # 缓存
 # https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#caches
 # https://docs.djangoproject.com/zh-hans/5.2/topics/cache/
+# TODO: 可参考 ./docs/CACHE.md 中的配置模板替换 default。
 CACHES = {
     'default': dict(
         BACKEND='django.core.cache.backends.locmem.LocMemCache',
+    ),
+}
+
+# 文件存储
+# https://docs.djangoproject.com/zh-hans/5.2/ref/settings/#storages
+# 管理文件：https://docs.djangoproject.com/zh-hans/5.2/topics/files/
+# 管理静态文件：https://docs.djangoproject.com/zh-hans/5.2/ref/contrib/staticfiles/
+# TODO: 可参考 ./docs/STORAGE.md 中的配置模板替换 default 和/或 staticfiles。
+STORAGES = {
+    'default': dict(
+        BACKEND='django.core.files.storage.FileSystemStorage',
+    ),
+    'staticfiles': dict(
+        BACKEND='django.contrib.staticfiles.storage.StaticFilesStorage',
     ),
 }
 
