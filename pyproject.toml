@@ -16,8 +16,10 @@ dev = [
 ]
 
 test = [
+    # 包含 dev 依赖。
+    "django-storages[boto3]~=1.14",
     "djangorestframework-stubs~=3.17",
-    "ruff",
     "psycopg[binary,pool]~=3.3.4",
     "redis[hiredis]",
+    "ruff",
 ]
