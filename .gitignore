@@ -6,12 +6,12 @@
 /.env.*.local
 /django_template_repo/settings_*.py
 
-# 缓存
+# 运行时文件
 **/__pycache__/
 /.cache/
 /cache/
-
-# 日志
+/static/
+/uploads/
 /logs/
 *.log
 
@@ -21,8 +21,20 @@
 ehthumbs.db
 Thumbs.db
 
-# IDE配置
+# IDE、AI、工具相关
 /.git/
 /.idea/
 /.vscode/
+/.claude/
+/.cursor/
+/.cline/
+/.codeium/
+/.continue/
+/.gemini/
+/.aider/
+/.qodo/
+/.tabnine/
+/.bloop/
 /.apifox/
+/AGENTS.md
+/SKILLS.md
