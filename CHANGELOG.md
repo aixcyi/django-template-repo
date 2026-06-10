@@ -11,6 +11,11 @@
 - Redis 配置模板从 `README.md` 文件移到 `./docs/` 下的 `CACHE.md`。
 - 添加重命名 Django Settings 所在目录的脚本 `./scripts/fit.py`。
 
+### Fixed
+
+- 更正 `HTTPMethod` 在 Python 3.10 的代替实现。
+- 更正不兼容的 `HTTPMethod` 导入。
+
 ## [5.0.0] - 2026-06-09
 
 ### Added

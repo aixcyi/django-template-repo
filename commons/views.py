@@ -9,7 +9,6 @@ __all__ = [
 
 import sys
 from contextlib import AbstractContextManager, ContextDecorator
-from http import HTTPMethod
 from inspect import currentframe
 from typing import Any
 
@@ -31,6 +30,7 @@ from rest_framework.views import APIView, exception_handler
 
 from commons.exceptions import MeowViewException
 from commons.response import Errcode, standardize
+from utils.http import HTTPMethod
 from utils.views import EasyViewSetMixin
 
 

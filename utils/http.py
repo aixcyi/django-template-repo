@@ -9,10 +9,9 @@ import sys
 if sys.version_info >= (3, 11):
     from http import HTTPMethod
 else:
-    from enum import StrEnum, _simple_enum
+    from enum import Enum
 
-    @_simple_enum(StrEnum)
-    class HTTPMethod:
+    class HTTPMethod(str, Enum):
         """HTTP methods and descriptions
 
         Methods from the following RFCs are all observed:
@@ -21,7 +20,7 @@ else:
             * RFC 5789: PATCH Method for HTTP
         """
 
-        def __new__(cls, value, description):
+        def __new__(cls, value, description=''):
             obj = str.__new__(cls, value)
             obj._value_ = value
             obj.description = description
