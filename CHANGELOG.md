@@ -9,6 +9,7 @@
 
 - 数据库配置模板从 Django Settings 文件移到 `./docs/` 下的 `DATABASE.md`、`STORAGE.md`。
 - Redis 配置模板从 `README.md` 文件移到 `./docs/` 下的 `CACHE.md`。
+- 添加重命名 Django Settings 所在目录的脚本 `./scripts/fit.py`。
 
 ## [5.0.0] - 2026-06-09
 

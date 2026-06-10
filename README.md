@@ -33,6 +33,7 @@
 | `./static`               | 静态文件 | 存储项目静态文件。完全按照[用法](#用法)配置后，首次运行时自动生成。  |
 | `./uploads`              | 上传文件 | 存储用户上传的文件。完全按照[用法](#用法)配置后，首次运行时自动生成。 |
 | `./utils`                | 通用工具 | 跨项目的、通用的工具或代码。                        |
+| `./scripts`              | 脚本工具 | 提供给模板使用者的脚本工具。                        |
 | `./api`                  | 封装接口 | 与第三方和第二方交互的请求接口及响应处理。                 |
 | `./commons`              | 定制工具 | 仅适用于当前项目的工具或对框架的定制。                   |
 | `./django_template_repo` | 项目配置 | Django Settings、总路由等。                 |
@@ -122,9 +123,12 @@ uv sync --extra dev
 
 ### 第三步：命名项目
 
-1. 重命名目录 `./django_template_repo/` 为你的项目名（需要符合 Python 包命名规则）；
-2. 全局搜索并替换字符串 `django_template_repo` 为你的项目名（需要符合 Python 包命名规则）；
-3. 修改 `./pyproject.toml` 下 `[project]` 一节中的 `name` 为你的项目名称、`version` 为你的项目版本号。
+1. 修改 `./pyproject.toml` 下 `[project]` 一节中的 `name` 为你的项目名称、`version` 为你的项目版本号。
+2. 模板的 Django Settings 目录位于 `./django_template_repo/`，可以执行以下命令来一键更名（需要符合 Python 包命名规则）。
+
+```shell
+uv run scripts/fit.py
+```
 
 ### 第四步：配置环境
 
