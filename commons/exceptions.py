@@ -1,5 +1,6 @@
 __all__ = [
     'MeowViewException',
+    'APINotImplemented',
 ]
 
 from rest_framework import status
@@ -41,3 +42,12 @@ class MeowViewException(Exception):
         r = resp200(code=self.errcode, msg=self.message, ctx=self.context, **self.fields)
         r.status_code = self.status
         return r
+
+
+class APINotImplemented(MeowViewException):
+    """
+    接口未被实现。
+    """
+
+    tip = '接口未实现'
+    status = status.HTTP_501_NOT_IMPLEMENTED

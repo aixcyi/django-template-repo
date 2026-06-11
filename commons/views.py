@@ -17,6 +17,7 @@ from django.core.exceptions import (
     ValidationError as DjangoValidationError,
 )
 from django.db import IntegrityError
+from django.db.models import QuerySet
 from rest_framework import mixins, status
 from rest_framework.exceptions import (
     APIException,
@@ -25,11 +26,12 @@ from rest_framework.exceptions import (
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.renderers import JSONRenderer
+from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView, exception_handler
+from rest_framework.views import exception_handler
 
-from commons.exceptions import MeowViewException
-from commons.response import Errcode, standardize
+from commons.exceptions import MeowViewException, APINotImplemented
+from commons.response import Errcode, standardize, resp200
 from utils.http import HTTPMethod
 from utils.views import EasyViewSetMixin
 
@@ -173,9 +175,9 @@ def meow_exception_handler(exc: Exception, context: dict[str, Any]) -> Response 
             return exception_handler(exc, context)
 
 
-class MeowAPIView(APIView):
+class MeowAPIView(GenericAPIView):
     """
-    此类是对基于API的视图类（APIView）的定制。
+    项目定制的基本 API 视图类。
     """
 
     @property
@@ -197,13 +199,44 @@ class MeowAPIView(APIView):
         else:
             return super().handle_exception(exc)
 
+    def paginate(self, data: list | tuple | QuerySet) -> Response:
+        """
+        对任意数据分页，并返回分页后的响应。
 
-class MeowViewSet(EasyViewSetMixin, MeowAPIView, GenericAPIView):
+        - 需要定义 ``self.pagination_class`` 或在 Django Settings
+          中配置 ``REST_FRAMEWORK.DEFAULT_PAGINATION_CLASS``。
+        """
+        if self.paginator is None:
+            return resp200(data)
+        page = self.paginate_queryset(data)
+        return self.get_paginated_response(page)
+
+
+class MeowViewSet(EasyViewSetMixin, MeowAPIView):
     """
-    此类是对基于API接口集合的视图类（GenericAPIView+ViewSetMixin）的定制。
+    项目定制的简单 API 视图集合类。
     """
 
-    pass
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        raise APINotImplemented()
+
+    def retrieve(self, request: Request, *args, **kwargs) -> Response:
+        raise APINotImplemented()
+
+    def create(self, request: Request, *args, **kwargs) -> Response:
+        raise APINotImplemented()
+
+    def update(self, request: Request, *args, **kwargs) -> Response:
+        raise APINotImplemented()
+
+    def partial_update(self, request: Request, *args, **kwargs) -> Response:
+        raise APINotImplemented()
+
+    def destroy(self, request: Request, *args, **kwargs) -> Response:
+        raise APINotImplemented()
+
+    def soft_delete(self, request: Request, *args, **kwargs) -> Response:
+        raise APINotImplemented()
 
 
 class MeowModelViewSet(
@@ -214,6 +247,10 @@ class MeowModelViewSet(
     SoftDeleteModelMixin,
     MeowViewSet,
 ):
+    """
+    项目定制的模型视图集合类。
+    """
+
     def finalize_response(self, request, response: Response, *args, **kwargs):
         old = super().finalize_response(request, response, *args, **kwargs)
 

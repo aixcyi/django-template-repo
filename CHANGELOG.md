@@ -5,11 +5,18 @@
 
 ## Unreleased
 
+### Added
+
+- 添加 `APINotImplemented` 来告诉前端 API 未实现。
+- 为项目定制的基本 API 视图类 `MeowAPIView` 添加 `paginate()` 对任意数据分页，并返回分页后的响应。
+- 为项目定制的简单 API 视图集合类 `MeowViewSet` 添加 `EasyViewSetMixin` 的协议方法。
+
 ### Changed
 
 - 数据库配置模板从 Django Settings 文件移到 `./docs/` 下的 `DATABASE.md`、`STORAGE.md`。
 - Redis 配置模板从 `README.md` 文件移到 `./docs/` 下的 `CACHE.md`。
 - 添加重命名 Django Settings 所在目录的脚本 `./scripts/fit.py`。
+- 项目定制的基本 API 视图类 `MeowAPIView` 父类从 `APIView` 改为 `GenericAPIView`（对性能无影响）。
 
 ### Fixed
 
